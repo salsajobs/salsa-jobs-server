@@ -15,7 +15,7 @@ app.post('/jobs', function (req, res) {
   
   fetch('https://nsjobs-f8648.firebaseio.com/jobs.json', { method: 'POST', body: `{"url" : "${req.body.text}"}` })
     .then(res => res.json())
-    .then(json => fetch(SLACK_BOT_URL, { method: 'POST', body: body }))
+    .then(json => fetch(SLACK_BOT_URL, { method: 'POST', body: offer }))
     .then(() => res.send(201).send(offer))
     .catch(err => {
       console.log(err);
