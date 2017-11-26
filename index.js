@@ -1,7 +1,6 @@
 const app = require('express')();
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
-const firebase = require('firebase');
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
