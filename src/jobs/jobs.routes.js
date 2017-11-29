@@ -8,22 +8,22 @@
  */
 
 const controller = require('./jobs.controller');
+const Offer = require('./Offer');
 
 /**
  * Request handler for posting a new job offer.
  * @param {*} req 
  * @param {*} res 
  */
-function postJob(req, res) {
-    const offer = _buildOffer(req);
-    controller.postJob(offer)
-        .then(() => {
-            res.sendStatus(201);
-        })
-        .catch(() => {
-            console.log(err);
-            res.send(500);
-        });
+async function postJob(req, res) {
+    try {
+        const offer = _buildOffer(req);
+        await controller.postJob(offer)
+        res.sendStatus(201);
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
 }
 
 /**
@@ -31,9 +31,7 @@ function postJob(req, res) {
  * @param {*} req 
  */
 function _buildOffer(req) {
-    return {
-        text: req.body.text
-    }
+    return new Offer(req.body.text);
 }
 
 

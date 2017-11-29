@@ -14,7 +14,7 @@ function saveOffer(offer) {
  * @param {*} offer 
  */
 function _buildBody(offer) {
-    return `{ "url" : "${offer.text}" }`;
+    return JSON.stringify(offer);
 }
 
 
