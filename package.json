@@ -11,6 +11,10 @@
     "request": "^2.83.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1"
   }
 }
