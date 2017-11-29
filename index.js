@@ -2,25 +2,12 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const PORT = process.env.PORT || 3000;
+const jobsRoutes = require('./src/jobs/jobs.routes');
 
+// Config express to parse the slack http requests.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const SLACK_BOT_URL = 'https://hooks.slack.com/services/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';
-
-app.post('/jobs', function (req, res) {
-  console.log(req.body.text);
-  const offer = {
-    text: req.body.text
-  };
-  
-  fetch('https://nsjobs-f8648.firebaseio.com/jobs.json', { method: 'POST', body: `{"url" : "${req.body.text}"}` })
-    .then(() => fetch(SLACK_BOT_URL, { method: 'POST', body: JSON.stringify(offer) }))
-    .then(() => res.status(201).send(offer))
-    .catch(err => {
-      console.log(err);
-      res.send(500);
-    });
-});
+app.post('/jobs', jobsRoutes.postJob);
 
 app.listen(PORT);
