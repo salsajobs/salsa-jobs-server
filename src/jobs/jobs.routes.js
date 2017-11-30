@@ -1,7 +1,7 @@
 /**
  *
  * This file contains express routes in form of functions (req, res) => any.
- * This way we can keep the bussines logic {@link jobs.controller } away from the 
+ * This way we can keep the bussines logic {@link jobs.controller } away from the
  * framework.
  *
  * @namespace {jobs.routes}
@@ -12,12 +12,12 @@ const Offer = require('./Offer');
 
 /**
  * Request handler for posting a new job offer.
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 async function postJob(req, res) {
     try {
-        const offer = _buildOffer(req);
+        const offer = _buildOffer(req.body.text);
         await controller.postJob(offer)
         res.sendStatus(201);
     } catch (err) {
@@ -28,10 +28,10 @@ async function postJob(req, res) {
 
 /**
  * Build an offer object from a http request.
- * @param {*} req 
+ * @param {*} req
  */
-function _buildOffer(req) {
-    return new Offer(req.body.text);
+function _buildOffer(text) {
+    return new Offer(text);
 }
 
 
