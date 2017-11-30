@@ -1,12 +1,31 @@
 const fetch = require('node-fetch');
+const firebase = require('firebase');
+const Offer = require('./Offer');
 const FIREBASE_SERVER = require('../config/index').FIREBASE_SERVER;
+const FIREBASE_URL = require('../config/index').FIREBASE_URL;
+const JOBS_DATABASE = require('../config/index').JOBS_DATABASE;
+
+const FirebaseApp = firebase.initializeApp({
+  databaseURL: FIREBASE_URL
+});
+
+const FirebaseDatabase = firebase.database();
 
 /**
  * Store a job offer in our database.
  * @param {*} offer
  */
 function saveOffer(offer) {
-    return fetch(FIREBASE_SERVER, { method: 'POST', body: _buildBody(offer) })
+    const { link, description, createdAt, text } = offer;
+
+    return FirebaseDatabase
+      .ref(`${JOBS_DATABASE}/`)
+      .push({
+        link,
+        description,
+        createdAt,
+        text
+      });
 }
 
 /**
@@ -16,6 +35,5 @@ function saveOffer(offer) {
 function _buildBody(offer) {
     return JSON.stringify(offer);
 }
-
 
 module.exports = { saveOffer };
