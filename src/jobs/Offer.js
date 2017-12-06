@@ -1,11 +1,17 @@
 const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
 
-class Offer {
-    constructor(rawText) {
-        this.link = this._getLink(rawText);
-        this.description = this._getDescription(rawText, this.link);
+/**
+ * 
+ */class Offer {
+    /**
+     * 
+     * @param {object} query 
+     */
+    constructor(query) {
+        this.link = this._getLink(query.text);
+        this.description = this._getDescription(query.text, this.link);
         this.createdAt = Date.now();
-        this.text = rawText;
+        this.text = query.text;
     }
 
     _getLink(string) {
@@ -13,7 +19,7 @@ class Offer {
             const link = string.match(URL_REGEX);
             return link[0];
         } catch (err) {
-            throw new Error('Job offers must have a link.');
+            throw new Error(`Job offers must have a link. [${string}]`);
         }
     }
 

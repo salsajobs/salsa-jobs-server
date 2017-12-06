@@ -17,7 +17,7 @@ const Offer = require('./Offer');
  */
 async function postJob(req, res) {
     try {
-        const offer = _buildOffer(req.body.text);
+        const offer = _buildOffer(req.query);
         await controller.postJob(offer)
         res.sendStatus(201);
     } catch (err) {
@@ -28,10 +28,10 @@ async function postJob(req, res) {
 
 /**
  * Build an offer object from a http request.
- * @param {*} req
+ * @param {object} query
  */
-function _buildOffer(text) {
-    return new Offer(text);
+function _buildOffer(query) {
+    return new Offer(query);
 }
 
 
