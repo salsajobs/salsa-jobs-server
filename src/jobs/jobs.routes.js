@@ -17,7 +17,7 @@ const Offer = require('./Offer');
  */
 async function postJob(req, res) {
     try {
-        const offer = _buildOffer(req.query);
+        const offer = _buildOffer(req.body);
         await controller.postJob(offer)
         res.sendStatus(201);
     } catch (err) {
