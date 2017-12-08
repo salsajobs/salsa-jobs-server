@@ -32,6 +32,17 @@ describe('jobs.Offer', () => {
             expect(offer.description).toEqual('We are looking for a software expert');
             expect(offer.text).toEqual('https://example.com/foo/bar We are looking for a software expert');
         });
+
+        it('should create a metadata field', () => {
+            const offer = new Offer({ channel_id: 'channel_id_mock', user_id: 'user_id_mock', text: 'https://example.com/foo/bar We are looking for a software expert' });
+
+            expect(offer.link).toEqual('https://example.com/foo/bar');
+            expect(offer.createdAt).toBeDefined();
+            expect(offer.description).toEqual('We are looking for a software expert');
+            expect(offer.text).toEqual('https://example.com/foo/bar We are looking for a software expert');
+            expect(offer.meta.channel_id).toEqual('channel_id_mock');
+            expect(offer.meta.user_id).toEqual('user_id_mock');
+        });
     });
 });
 

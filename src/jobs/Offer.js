@@ -12,6 +12,7 @@ const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp
         this.description = this._getDescription(query.text, this.link);
         this.createdAt = Date.now();
         this.text = query.text;
+        this.meta = query;
     }
 
     _getLink(string) {
