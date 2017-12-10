@@ -27,35 +27,16 @@ function getOffer(offer) {
 }
 
 /**
- * Add a new upvote to an existing offer
+ * Add a new vote to an existing offer
  * @param {*} offer
  */
-function downvote(offer) {
-  const upvote = _buildVote.call(this, offer);
+function vote(type, offer) {
+  const vote = `${offer.meta.user_id}/${offer.meta.team_id}`;
   return ref.child(hash(offer.link))
     .child('votes')
-    .child('upvotes')
-    .push(upvote);
+    .child(type)
+    .push(vote);
 }
 
-/**
- * Add a new downvote to an existing offer
- * @param {*} offer
- */
-function upvote(offer) {
-  const downvote = _buildVote.call(this, offer);
-  return ref.child(hash(offer.link))
-    .child('votes')
-    .child('downvotes')
-    .push(downvote);
-}
 
-/**
- * Build offer vote firebase path
- * @param {*} offer
- */
-function _buildVote (offer) {
-  return `${offer.meta.user_id}/${offer.meta.team_id}`;
-}
-
-module.exports = { saveOffer, getOffer, upvote, downvote };
+module.exports = { saveOffer, getOffer, vote };

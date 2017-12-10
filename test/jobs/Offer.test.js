@@ -11,6 +11,7 @@ describe('jobs.Offer', () => {
 
             expect(offer.link).toEqual('http://example.com/job.pdf');
             expect(offer.createdAt).toBeDefined();
+            expect(offer.votes).toBeDefined();
             expect(offer.description).toEqual('Frontend developer');
             expect(offer.text).toEqual('Frontend developer http://example.com/job.pdf');
         });
@@ -45,4 +46,3 @@ describe('jobs.Offer', () => {
         });
     });
 });
-

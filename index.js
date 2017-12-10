@@ -6,7 +6,7 @@ const jobsRoutes = require('./src/jobs/jobs.routes');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-app.post('/jobs', jobsRoutes.postJob);
+app.post('/jobs', jobsRoutes.broadcast);
 app.post('/slack', jobsRoutes.slackResponse);
 
 app.listen(PORT);

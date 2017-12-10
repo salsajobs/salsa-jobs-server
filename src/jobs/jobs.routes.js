@@ -11,14 +11,14 @@ const controller = require('./jobs.controller');
 const Offer = require('./Offer');
 
 /**
- * Request handler for posting a new job offer.
+ * Request handler for broadcasting a new job offer.
  * @param {*} req
  * @param {*} res
  */
-async function postJob(req, res) {
+async function broadcast(req, res) {
     try {
         const offer = _buildOffer(req.body);
-        await controller.postJob(offer);
+        await controller.broadcast(offer);
         res.sendStatus(201);
     } catch (err) {
         console.error(err);
@@ -34,15 +34,9 @@ async function postJob(req, res) {
 async function slackResponse(req, res) {
   try {
     const slackData = _buildSlackData(req.body);
-    const slackActionPromises = [];
+    await _runActions(slackData.actions, offer);
 
-    slackData.actions.forEach((action) => {
-      slackActionPromises.push(await controller[action](offer));
-    });
-
-    await slackActionPromises.all();
     res.sendStatus(201);
-
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
@@ -65,4 +59,15 @@ function _buildSlackData(query) {
     return query;
 }
 
-module.exports = { postJob, slackResponse };
+/**
+ * Build a slack response object from a http request.
+ * @param {*} actions
+ * @param {*} Offer
+ */
+function _runActions(actions, offer) {
+  return actions
+    .map(action => controller[action](offer))
+    .all();
+}
+
+module.exports = { broadcast, slackResponse };

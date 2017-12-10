@@ -3,6 +3,7 @@ jest.setMock('node-fetch', fetch);
 
 const controller = require('../../src/jobs/jobs.controller');
 const persistence = require('../../src/jobs/jobs.persistence');
+const SlackActions = require('../../src/slack/slack.actions');
 
 const { offer, existingOfferSnapshot, noOfferSnapshot } = require('../mocks');
 
@@ -37,29 +38,29 @@ describe('jobs.controller', () => {
 
     describe('upvote', () => {
       it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'upvote').mockImplementation(() => Promise.resolve());
+          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
 
-          return controller.upvote(offer);
+          return controller.vote(SlackActions.UPVOTE.value, offer);
       });
 
       it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'upvote').mockImplementation(() => Promise.reject());
+          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.reject());
 
-          return controller.upvote(offer).catch(done);
+          return controller.vote(SlackActions.UPVOTE.value, offer).catch(done);
       });
     });
 
     describe('downvote', () => {
       it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'downvote').mockImplementation(() => Promise.resolve());
+          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
 
-          return controller.downvote(offer);
+          return controller.vote(SlackActions.DOWNVOTE.value, offer);
       });
 
       it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'downvote').mockImplementation(() => Promise.reject());
+          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.reject());
 
-          return controller.downvote(offer).catch(done);
+          return controller.vote(SlackActions.DOWNVOTE.value, offer).catch(done);
       });
     });
 

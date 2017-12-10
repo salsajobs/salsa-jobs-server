@@ -43,21 +43,12 @@ function broadcast(offer) {
 }
 
 /**
- * Add a new upvote to an offer
+ * Add a new vote to an offer
  *
  * @param {object} offer
  */
-function upvote(offer) {
-  return persistence.upvote(offer);
-}
-
-/**
- * Add a new downvote to an offer
- *
- * @param {object} offer
- */
-function downvote(offer) {
-  return persistence.downvote(offer);
+function vote(type, offer) {
+  return persistence.vote(type, offer);
 }
 
 /**
@@ -70,4 +61,4 @@ function broadcastSlack(offer) {
   return slackMessage.broadcast();
 }
 
-module.exports = { broadcast, upvote, downvote, postJob, getJob, broadcastSlack };
+module.exports = { broadcast, vote, postJob, getJob, broadcastSlack };
