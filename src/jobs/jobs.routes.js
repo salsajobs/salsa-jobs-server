@@ -18,12 +18,35 @@ const Offer = require('./Offer');
 async function postJob(req, res) {
     try {
         const offer = _buildOffer(req.body);
-        await controller.postJob(offer)
+        await controller.postJob(offer);
         res.sendStatus(201);
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
     }
+}
+
+/**
+ * Request handler for slack actions
+ * @param {*} req
+ * @param {*} res
+ */
+async function slackResponse(req, res) {
+  try {
+    const slackData = _buildSlackData(req.body);
+    const slackActionPromises = [];
+
+    slackData.actions.forEach((action) => {
+      slackActionPromises.push(await controller[action](offer));
+    });
+
+    await slackActionPromises.all();
+    res.sendStatus(201);
+
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
+  }
 }
 
 /**
@@ -34,5 +57,12 @@ function _buildOffer(query) {
     return new Offer(query);
 }
 
+/**
+ * Build a slack response object from a http request.
+ * @param {object} query
+ */
+function _buildSlackData(query) {
+    return query;
+}
 
-module.exports = { postJob };
+module.exports = { postJob, slackResponse };

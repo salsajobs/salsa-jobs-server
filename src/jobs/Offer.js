@@ -1,11 +1,13 @@
 const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
 
 /**
- * 
- */class Offer {
+ *
+ */
+
+ class Offer {
     /**
-     * 
-     * @param {object} query 
+     *
+     * @param {object} query
      */
     constructor(query) {
         this.link = this._getLink(query.text);
@@ -13,6 +15,11 @@ const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp
         this.createdAt = Date.now();
         this.text = query.text;
         this.meta = query;
+        this.shared = 0;
+        this.votes = {
+          upvotes: [],
+          downvotes: []
+        };
     }
 
     _getLink(string) {

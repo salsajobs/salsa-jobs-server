@@ -11,11 +11,51 @@ const FirebaseDatabase = firebase.database();
 const ref = FirebaseDatabase.ref(JOBS_DATABASE);
 
 /**
- * Store a job offer in our database.
+ * Store a job offer in the database.
  * @param {*} offer
  */
 function saveOffer(offer) {
   return ref.child(hash(offer.link)).set(offer);
 }
 
-module.exports = { saveOffer };
+/**
+ * Get a job offer from the database.
+ * @param {*} offer
+ */
+function getOffer(offer) {
+  return ref.child(hash(offer.link)).once('value');
+}
+
+/**
+ * Add a new upvote to an existing offer
+ * @param {*} offer
+ */
+function downvote(offer) {
+  const upvote = _buildVote.call(this, offer);
+  return ref.child(hash(offer.link))
+    .child('votes')
+    .child('upvotes')
+    .push(upvote);
+}
+
+/**
+ * Add a new downvote to an existing offer
+ * @param {*} offer
+ */
+function upvote(offer) {
+  const downvote = _buildVote.call(this, offer);
+  return ref.child(hash(offer.link))
+    .child('votes')
+    .child('downvotes')
+    .push(downvote);
+}
+
+/**
+ * Build offer vote firebase path
+ * @param {*} offer
+ */
+function _buildVote (offer) {
+  return `${offer.meta.user_id}/${offer.meta.team_id}`;
+}
+
+module.exports = { saveOffer, getOffer, upvote, downvote };
