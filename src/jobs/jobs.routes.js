@@ -27,23 +27,6 @@ async function broadcast(req, res) {
 }
 
 /**
- * Request handler for slack actions
- * @param {*} req
- * @param {*} res
- */
-async function slackResponse(req, res) {
-  try {
-    const slackData = _buildSlackData(req.body);
-    await _runActions(slackData.actions, offer);
-
-    res.sendStatus(201);
-  } catch (err) {
-    console.error(err);
-    return res.sendStatus(500);
-  }
-}
-
-/**
  * Build an offer object from a http request.
  * @param {object} query
  */
@@ -51,23 +34,4 @@ function _buildOffer(query) {
     return new Offer(query);
 }
 
-/**
- * Build a slack response object from a http request.
- * @param {object} query
- */
-function _buildSlackData(query) {
-    return query;
-}
-
-/**
- * Build a slack response object from a http request.
- * @param {*} actions
- * @param {*} Offer
- */
-function _runActions(actions, offer) {
-  return actions
-    .map(action => controller[action](offer))
-    .all();
-}
-
-module.exports = { broadcast, slackResponse };
+module.exports = { broadcast };
