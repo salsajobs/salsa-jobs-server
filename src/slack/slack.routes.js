@@ -57,7 +57,7 @@ async function sendMessage(req, res) {
  * @param {*} Offer
  */
 function _getSlackActions(payload) {
-  return payload.actions.filter(action => !!SLACK_ACTIONS[action.name])
+  return payload.actions.filter(action => action.value === 'upvote' || action.value === 'downvote');
 }
 
 module.exports = { sendMessage };
