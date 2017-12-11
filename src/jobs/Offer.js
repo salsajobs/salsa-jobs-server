@@ -10,6 +10,7 @@ const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp
      * @param {object} query
      */
     constructor(query) {
+        console.log('\nOFFER: ', query);
         this.link = this._getLink(query.text);
         this.description = this._getDescription(query.text, this.link);
         this.createdAt = Date.now();
