@@ -38,7 +38,7 @@ async function sendMessage(req, res) {
     if (slackActions.length) {
       await Promise.all(slackActions.map(action => {
         const uid = `${payload.user.id}/${payload.team.id}`;
-        return SLACK_ACTIONS[action.name](payload, uid);
+        return SLACK_ACTIONS[action.value](payload, uid);
       }))
       res.sendStatus(201);
     } else {
