@@ -28,8 +28,12 @@ const SLACK_ACTIONS = {
 async function sendMessage(req, res) {
   console.log('sendMessage', req.body);
   try {
+    console.log('\nLOG_0');
     const payload = JSON.parse(req.body.payload);
+    console.log('\nLOG_1');
     const slackActions = _getSlackActions(payload);
+
+    console.log('slackActions', slackActions);
 
     if (slackActions.length) {
       await Promise.all(slackActions.map(action => {
