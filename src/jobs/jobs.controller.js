@@ -47,8 +47,8 @@ function broadcast(offer) {
  *
  * @param {object} offer
  */
-function vote(type, offer) {
-  return persistence.vote(type, offer);
+function vote(type, offer, uid) {
+  return persistence.vote(type, offer, uid);
 }
 
 /**

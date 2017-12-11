@@ -30,12 +30,11 @@ function getOffer(offer) {
  * Add a new vote to an existing offer
  * @param {*} offer
  */
-function vote(type, offer) {
-  const vote = `${offer.meta.user_id}/${offer.meta.team_id}`;
+function vote(type, offer, uid) {
   return ref.child(hash(offer.link))
     .child('votes')
     .child(type)
-    .push(vote);
+    .push(uid);
 }
 
 

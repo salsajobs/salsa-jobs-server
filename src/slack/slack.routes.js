@@ -8,15 +8,15 @@
 const jobsController = require('../jobs/jobs.controller');
 const Offer = require('../jobs/Offer');
 
-const slackActions = {
-  async downvote(type, payload) {
+const SLACK_ACTIONS = {
+  downvote(payload, uid) {
     const offer = new Offer(payload.original_message);
-    await jobsController.vote(type, offer);
+    return jobsController.vote('downvote', offer, uid);
   },
 
-  async upvote(type, payload) {
+  upvote(payload, uid) {
     const offer = new Offer(payload.original_message);
-    await jobsController.vote(type, offer);
+    return jobsController.vote('upvote', offer, uid);
   }
 };
 
@@ -29,10 +29,13 @@ async function sendMessage(req, res) {
   console.log('sendMessage', req.body);
   try {
     const payload = JSON.parse(req.body.payload);
-    const slackActions = _runSlackActions(payload);
+    const slackActions = _getSlackActions(payload);
 
     if (slackActions.length) {
-      await slackActions.all();
+      await Promise.all(slackActions.map(action => {
+        const uid = `${payload.user.id}/${payload.team.id}`;
+        return SLACK_ACTIONS[action.name](payload, uid);
+      }))
       res.sendStatus(201);
     } else {
       res.sendStatus(403);
@@ -45,14 +48,12 @@ async function sendMessage(req, res) {
 }
 
 /**
- * Build a slack response object from a http request.
+ * Get the actions from the payload
  * @param {*} actions
  * @param {*} Offer
  */
-async function _runSlackActions(payload) {
-  return await payload.actions
-    .filter(action => !!slackActions[action.name])
-    .map(action => slackActions[action.name](action.name, payload));
+function _getSlackActions(payload) {
+  return payload.actions.filter(action => !!SLACK_ACTIONS[action.name])
 }
 
 module.exports = { sendMessage };
