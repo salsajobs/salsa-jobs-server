@@ -26,6 +26,7 @@ const slackActions = {
  * @param {*} res
  */
 async function sendMessage(req, res) {
+  console.log('sendMessage', req.body);
   try {
     const payload = JSON.parse(req.body.payload);
     const slackActions = _runSlackActions(payload);
