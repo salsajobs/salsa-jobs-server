@@ -31,6 +31,9 @@ function getOffer(offer) {
  * @param {*} offer
  */
 function vote(type, offer, uid) {
+  console.log('persistence:vote:type:', type);
+  console.log('persistence:vote:offer:', offer);
+  console.log('persistence:vote:uid:', uid);
   return ref.child(hash(offer.link))
     .child('votes')
     .child(type)

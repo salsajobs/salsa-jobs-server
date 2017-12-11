@@ -48,6 +48,9 @@ function broadcast(offer) {
  * @param {object} offer
  */
 function vote(type, offer, uid) {
+  console.log('controller:vote:type:', type);
+  console.log('controller:vote:offer:', offer);
+  console.log('controller:vote:uid:', uid);
   return persistence.vote(type, offer, uid);
 }
 
