@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const config = require('../config');
 
 const persistence = require('./jobs.persistence');
@@ -47,11 +46,12 @@ function broadcast(offer) {
  *
  * @param {object} offer
  */
-function vote(type, offer, uid) {
+function vote(url, type, offer, uid) {
+  console.log('controller:vote:url:', url);
   console.log('controller:vote:type:', type);
   console.log('controller:vote:offer:', offer);
   console.log('controller:vote:uid:', uid);
-  return persistence.vote(type, offer, uid);
+  return persistence.vote(url, type, offer, uid);
 }
 
 /**

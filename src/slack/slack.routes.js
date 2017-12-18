@@ -11,12 +11,12 @@ const Offer = require('../jobs/Offer');
 const SLACK_ACTIONS = {
   downvote(payload, uid) {
     const offer = new Offer(payload.original_message);
-    return jobsController.vote('downvote', offer, uid);
+    return jobsController.vote(payload.response_url, 'downvote', offer, uid);
   },
 
   upvote(payload, uid) {
     const offer = new Offer(payload.original_message);
-    return jobsController.vote('upvote', offer, uid);
+    return jobsController.vote(payload.response_url, 'upvote', offer, uid);
   }
 };
 
@@ -26,21 +26,21 @@ const SLACK_ACTIONS = {
  * @param {*} res
  */
 async function sendMessage(req, res) {
-  console.log('sendMessage', req.body);
+
   try {
-    console.log('\nLOG_0');
     const payload = JSON.parse(req.body.payload);
-    console.log('\nLOG_1');
     const slackActions = _getSlackActions(payload);
 
     console.log('slackActions', slackActions);
 
     if (slackActions.length) {
-      await Promise.all(slackActions.map(action => {
-        const uid = `${payload.user.id}/${payload.team.id}`;
-        return SLACK_ACTIONS[action.value](payload, uid);
-      }))
-      res.sendStatus(201);
+      await Promise
+        .all(slackActions.map(action => {
+          const uid = `${payload.user.id}/${payload.team.id}`;
+          return SLACK_ACTIONS[action.value](payload, uid);
+        }))
+        .then(res.sendStatus(200))
+        .catch(res.sendStatus(500));
     } else {
       res.sendStatus(403);
     }

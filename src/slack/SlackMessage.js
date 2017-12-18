@@ -31,6 +31,17 @@ class SlackMessage {
     const options = { method: 'POST', body: content };
     return fetch(config.SLACK_BOT_URL, options);
   }
+
+  /**
+  * Answer to a request url
+  * @param {*} requestUrl
+  * @param {*} message
+  */
+  answer(requestUrl, message) {
+    const content = JSON.stringify(message);
+    const options = { method: 'POST', body: content };
+    return fetch(requestUrl, options);
+  }
 };
 
 
