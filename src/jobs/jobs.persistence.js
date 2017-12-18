@@ -3,6 +3,8 @@ const firebase = require('firebase');
 const FIREBASE_URL = require('../config/index').FIREBASE_URL;
 const JOBS_DATABASE = require('../config/index').JOBS_DATABASE;
 const SlackMessage = require('../slack/SlackMessage');
+const SlackActions = require('../slack/slack.actions');
+
 // Function used to create an unique id
 const hash = data => crypto.createHash('md5').update(data).digest("hex");
 
@@ -32,6 +34,7 @@ function getOffer(offer) {
  */
 function vote(url, type, offer, uid) {
   const slackMessage = new SlackMessage(offer);
+
   console.log('persistence:vote:type:', type);
   console.log('persistence:vote:offer:', offer);
   console.log('persistence:vote:uid:', uid);
@@ -41,7 +44,8 @@ function vote(url, type, offer, uid) {
     .child(type)
     .push(uid)
     .then(() => {
-      return SlackMessage.answer(url, type);
+      const message = 'You voted';
+      return SlackMessage.answer(url, message, type);
     });
 }
 

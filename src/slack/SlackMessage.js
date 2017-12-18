@@ -37,8 +37,12 @@ class SlackMessage {
   * @param {*} requestUrl
   * @param {*} message
   */
-  answer(requestUrl, message) {
-    const content = JSON.stringify(message);
+  answer(requestUrl, message, type) {
+    const text = SlackActions[type.toUpperCase()].text;
+    const content = JSON.stringify({
+      text: `${message}: ${text}`,
+      replace_original: false
+    });
     const options = { method: 'POST', body: content };
     return fetch(requestUrl, options);
   }
