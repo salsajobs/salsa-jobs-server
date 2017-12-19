@@ -31,11 +31,11 @@ async function sendMessage(req, res) {
     const action = payload.actions[0];
     const uid = `${payload.user.id}/${payload.team.id}`;
 
-    res.sendStatus(200);
+    res.send(200).end();
     return SLACK_ACTIONS[action.value](payload, uid);
   } catch (err) {
     console.error(err);
-    return res.sendStatus(500);
+    return res.send(500).end();
   }
 }
 
