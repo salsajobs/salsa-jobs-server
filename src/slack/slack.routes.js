@@ -26,38 +26,17 @@ const SLACK_ACTIONS = {
  * @param {*} res
  */
 async function sendMessage(req, res) {
-
   try {
     const payload = JSON.parse(req.body.payload);
-    const slackActions = _getSlackActions(payload);
+    const action = payload.actions[0];
+    const uid = `${payload.user.id}/${payload.team.id}`;
 
-    console.log('slackActions', slackActions);
-
-    if (slackActions.length) {
-      await Promise
-        .all(slackActions.map(action => {
-          const uid = `${payload.user.id}/${payload.team.id}`;
-          return SLACK_ACTIONS[action.value](payload, uid);
-        }))
-        .then(res.sendStatus(200))
-        .catch(res.sendStatus(500));
-    } else {
-      res.sendStatus(403);
-    }
-
+    res.sendStatus(200);
+    return SLACK_ACTIONS[action.value](payload, uid);
   } catch (err) {
     console.error(err);
     return res.sendStatus(500);
   }
-}
-
-/**
- * Get the actions from the payload
- * @param {*} actions
- * @param {*} Offer
- */
-function _getSlackActions(payload) {
-  return payload.actions.filter(action => action.value === 'upvote' || action.value === 'downvote');
 }
 
 module.exports = { sendMessage };

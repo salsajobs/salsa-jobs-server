@@ -38,6 +38,7 @@ function vote(url, type, offer, uid) {
   console.log('persistence:vote:type:', type);
   console.log('persistence:vote:offer:', offer);
   console.log('persistence:vote:uid:', uid);
+  console.log('persistence:vote:url:', url);
 
   return ref.child(hash(offer.link))
     .child('votes')
