@@ -46,7 +46,7 @@ function vote(url, type, offer, uid) {
     .push(uid)
     .then(() => {
       const message = 'You voted';
-      return SlackMessage.answer(url, message, type);
+      return slackMessage.answer(url, message, type);
     });
 }
 
