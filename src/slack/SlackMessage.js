@@ -33,7 +33,7 @@ class SlackMessage {
     Logger.log('Class:SlackMessage:broadcast', { responseUrl });
     const content = JSON.stringify(this.content);
     const options = { method: 'POST', body: content };
-    return fetch(config.SLACK_BOT_URL, options);
+    return fetch(responseUrl, options);
   }
 
   /**
