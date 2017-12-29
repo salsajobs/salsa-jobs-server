@@ -33,21 +33,16 @@ function getOffer(offer) {
 }
 
 /**
- * Add a new vote to an existing offer
- * @param {*} offer
+ * Add a new vote to an existing offer.
+ * 
+ * The votes are indexed by userID this way we prevent an user from voting twice.
  */
 function vote(url, type, offer, uid) {
   Logger.log('Jobs:persistence:vote', { url, type, offer, uid });
-  const slackMessage = new SlackMessage(offer);
-
   return ref.child(hash(offer.link))
     .child('votes')
-    .child(type)
-    .push(uid)
-    .then(() => {
-      const message = `You voted this offer: ${offer.link}`;
-      return slackMessage.answer(url, message, type);
-    });
+    .child(uid)
+    .push(type)
 }
 
 
