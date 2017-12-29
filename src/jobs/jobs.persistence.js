@@ -42,7 +42,7 @@ function vote(url, type, offer, uid) {
   return ref.child(hash(offer.link))
     .child('votes')
     .child(uid)
-    .push(type)
+    .set(type)
 }
 
 

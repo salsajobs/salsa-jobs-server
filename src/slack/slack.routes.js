@@ -10,18 +10,22 @@ const jobsController = require('../jobs/jobs.controller');
 const Offer = require('../jobs/Offer');
 
 const SLACK_ACTIONS = {
-  async downvote(payload, uid) {
+  /**
+   * Return a promise resolved with a firebase reference to the offer.
+   */
+  downvote(payload, uid) {
     Logger.log('Slack:routes:slack_actions:downvote', { payload, uid });
     const offer = new Offer(payload.original_message);
-    const reference = await jobsController.vote(payload.response_url, 'downvote', offer, uid);
-    return reference;
+    return jobsController.vote(payload.response_url, 'downvote', offer, uid);
   },
 
-  async upvote(payload, uid) {
+  /**
+   * Return a promise resolved with a firebase reference to the offer.
+   */
+  upvote(payload, uid) {
     Logger.log('Slack:routes:slack_actions:upvote', { payload, uid });
     const offer = new Offer(payload.original_message);
-    const reference = await jobsController.vote(payload.response_url, 'upvote', offer, uid);
-    return reference;
+    return jobsController.vote(payload.response_url, 'upvote', offer, uid);
   }
 };
 
@@ -38,7 +42,7 @@ async function sendMessage(req, res) {
     const uid = `${payload.user.id}/${payload.team.id}`;
 
     const reference = await SLACK_ACTIONS[action.value](payload, uid);
-
+    // TODO: Update message with vote count from reference?
     res.status(200).send(payload.original_message);
     
   } catch (error) {
