@@ -8,6 +8,7 @@
  */
 
 const Logger = require('../utils/logger');
+const config = require('../config');
 const controller = require('./jobs.controller');
 const Offer = require('./Offer');
 
@@ -20,8 +21,7 @@ async function broadcast(req, res) {
     Logger.log('Jobs:routes:broadcast', { req, res });
     try {
         const offer = _buildOffer(req.body);
-        const responseUrl = req.body.response_url;
-        await controller.broadcast(responseUrl, offer);
+        await controller.broadcast(config.SLACK_BOT_URL, offer);
         res.sendStatus(201);
     } catch (error) {
         Logger.error('Jobs:routes:broadcast', { error });

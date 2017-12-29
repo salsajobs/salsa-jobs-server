@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const config = require('../config');
 const Logger = require('../utils/logger');
 const SlackAttachments = require('./slack.attachments');
 const SlackActions = require('./slack.actions');
