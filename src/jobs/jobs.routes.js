@@ -22,6 +22,7 @@ async function broadcast(req, res) {
     try {
         const offer = _buildOffer(req.body);
         await controller.broadcast(config.SLACK_BOT_URL, offer);
+        res.status(201).send('Offer created');
     } catch (error) {
         Logger.error('Jobs:routes:broadcast', { error });
         return res.sendStatus(500);
