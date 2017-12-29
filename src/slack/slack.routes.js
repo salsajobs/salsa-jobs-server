@@ -39,7 +39,7 @@ async function sendMessage(req, res) {
   try {
     const payload = JSON.parse(req.body.payload);
     const action = payload.actions[0];
-    const uid = `${payload.user.id}/${payload.team.id}`;
+    const uid = `${payload.team.id}-${payload.user.id}`;
 
     const reference = await SLACK_ACTIONS[action.value](payload, uid);
     // TODO: Update message with vote count from reference?
