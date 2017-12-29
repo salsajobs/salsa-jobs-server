@@ -70,7 +70,7 @@ describe('jobs.controller', () => {
           jest.spyOn(controller, 'broadcastSlack').mockImplementation(() => Promise.resolve());
           fetch.mockResponse('{}');
 
-          return controller.broadcast(offer);
+          return controller.broadcast('responseUrl', offer);
       });
 
       it('should post an offer and return a resolved promise if the offer does not exist and broadcast succeeds', () => {
@@ -79,7 +79,7 @@ describe('jobs.controller', () => {
           jest.spyOn(controller, 'broadcastSlack').mockImplementation(() => Promise.resolve());
           fetch.mockResponse('{}');
 
-          return controller.broadcast(offer);
+          return controller.broadcast('responseUrl', offer);
       });
 
       it('should return a rejected promise when persistence fails and broadcast fails', done => {

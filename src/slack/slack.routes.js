@@ -5,16 +5,19 @@
  * @namespace {slack.routes}
  */
 
+const Logger = require('../utils/logger');
 const jobsController = require('../jobs/jobs.controller');
 const Offer = require('../jobs/Offer');
 
 const SLACK_ACTIONS = {
   downvote(payload, uid) {
+    Logger.log('Slack:routes:slack_actions:downvote', { payload, uid });
     const offer = new Offer(payload.original_message);
     return jobsController.vote(payload.response_url, 'downvote', offer, uid);
   },
 
   upvote(payload, uid) {
+    Logger.log('Slack:routes:slack_actions:upvote', { payload, uid });
     const offer = new Offer(payload.original_message);
     return jobsController.vote(payload.response_url, 'upvote', offer, uid);
   }
@@ -26,6 +29,7 @@ const SLACK_ACTIONS = {
  * @param {*} res
  */
 async function sendMessage(req, res) {
+  Logger.log('Slack:routes:sendMessage', { req, res });
   try {
     const payload = JSON.parse(req.body.payload);
     const action = payload.actions[0];
@@ -33,8 +37,8 @@ async function sendMessage(req, res) {
 
     res.send(200).end();
     return SLACK_ACTIONS[action.value](payload, uid);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    Logger.error('Slack:routes:sendMessage', { error });
     return res.send(500).end();
   }
 }

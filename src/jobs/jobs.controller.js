@@ -1,4 +1,5 @@
 const config = require('../config');
+const Logger = require('../utils/logger');
 
 const persistence = require('./jobs.persistence');
 const SlackMessage = require('../slack/SlackMessage');
@@ -10,6 +11,7 @@ const SlackMessage = require('../slack/SlackMessage');
  * @param {string} offer.text - The url where the offer is announced.
  */
 function postJob(offer) {
+  Logger.log('Jobs:controller:postJob', { offer });
   return persistence.saveOffer(offer);
 }
 
@@ -20,6 +22,7 @@ function postJob(offer) {
  * @param {string} offer.text - The url where the offer is announced.
  */
 function getJob(offer) {
+  Logger.log('Jobs:controller:getJob', { offer });
   return persistence.getOffer(offer);
 }
 
@@ -30,14 +33,17 @@ function getJob(offer) {
  *
  * @param {object} offer
  */
-function broadcast(offer) {
+function broadcast(responseUrl, offer) {
+    Logger.log('Jobs:controller:broadcast', { responseUrl, offer });
+
     return getJob(offer)
       .then((dataSnapshot) => {
+        Logger.log('Jobs:controller:broadcast:getJob', { dataSnapshot });
         const existingOffer = dataSnapshot.val();
 
         return existingOffer
-          ? broadcastSlack(existingOffer)
-          : postJob(offer).then(() => broadcastSlack(offer));
+          ? broadcastSlack(responseUrl, existingOffer)
+          : postJob(offer).then(() => broadcastSlack(responseUrl, offer));
       });
 }
 
@@ -47,10 +53,7 @@ function broadcast(offer) {
  * @param {object} offer
  */
 function vote(url, type, offer, uid) {
-  console.log('controller:vote:url:', url);
-  console.log('controller:vote:type:', type);
-  console.log('controller:vote:offer:', offer);
-  console.log('controller:vote:uid:', uid);
+  Logger.log('Jobs:controller:vote', { url, type, offer, uid });
   return persistence.vote(url, type, offer, uid);
 }
 
@@ -59,9 +62,10 @@ function vote(url, type, offer, uid) {
  *
  * @param {object} offer
  */
-function broadcastSlack(offer) {
+function broadcastSlack(responseUrl, offer) {
+  Logger.log('Jobs:controller:broadcastSlack', { responseUrl, offer });
   const slackMessage = new SlackMessage(offer);
-  return slackMessage.broadcast();
+  return slackMessage.broadcast(responseUrl);
 }
 
 module.exports = { broadcast, vote, postJob, getJob, broadcastSlack };

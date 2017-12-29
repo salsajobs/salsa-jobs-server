@@ -7,6 +7,7 @@
  * @namespace {jobs.routes}
  */
 
+const Logger = require('../utils/logger');
 const controller = require('./jobs.controller');
 const Offer = require('./Offer');
 
@@ -16,12 +17,14 @@ const Offer = require('./Offer');
  * @param {*} res
  */
 async function broadcast(req, res) {
+    Logger.log('Jobs:routes:broadcast', { req, res });
     try {
         const offer = _buildOffer(req.body);
-        await controller.broadcast(offer);
+        const responseUrl = req.body.response_url;
+        await controller.broadcast(responseUrl, offer);
         res.sendStatus(201);
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        Logger.error('Jobs:routes:broadcast', { error });
         return res.sendStatus(500);
     }
 }
@@ -31,6 +34,7 @@ async function broadcast(req, res) {
  * @param {object} query
  */
 function _buildOffer(query) {
+    Logger.log('Jobs:routes:_buildOffer', { query });
     return new Offer(query);
 }
 

@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const firebase = require('firebase');
+const Logger = require('../utils/logger');
+
 const FIREBASE_URL = require('../config/index').FIREBASE_URL;
 const JOBS_DATABASE = require('../config/index').JOBS_DATABASE;
 const SlackMessage = require('../slack/SlackMessage');
@@ -17,6 +19,7 @@ const ref = FirebaseDatabase.ref(JOBS_DATABASE);
  * @param {*} offer
  */
 function saveOffer(offer) {
+  Logger.log('Jobs:persistence:saveOffer', { offer });
   return ref.child(hash(offer.link)).set(offer);
 }
 
@@ -25,6 +28,7 @@ function saveOffer(offer) {
  * @param {*} offer
  */
 function getOffer(offer) {
+  Logger.log('Jobs:persistence:getOffer', { offer });
   return ref.child(hash(offer.link)).once('value');
 }
 
@@ -33,12 +37,8 @@ function getOffer(offer) {
  * @param {*} offer
  */
 function vote(url, type, offer, uid) {
+  Logger.log('Jobs:persistence:vote', { url, type, offer, uid });
   const slackMessage = new SlackMessage(offer);
-
-  console.log('persistence:vote:type:', type);
-  console.log('persistence:vote:offer:', offer);
-  console.log('persistence:vote:uid:', uid);
-  console.log('persistence:vote:url:', url);
 
   return ref.child(hash(offer.link))
     .child('votes')
