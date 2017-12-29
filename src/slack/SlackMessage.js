@@ -42,7 +42,8 @@ class SlackMessage {
     const content = JSON.stringify({
       text: `${message}: ${text}`,
       replace_original: false,
-      delete_original: false
+      delete_original: false,
+      response_type: 'ephemeral'
     });
     const options = { method: 'POST', body: content };
     return fetch(responseUrl, options);
