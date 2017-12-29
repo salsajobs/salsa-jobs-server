@@ -16,7 +16,6 @@ class SlackMessage {
     const voteAttachment = Object.assign({}, SlackAttachments.VOTE);
 
     this.content = {
-      text: 'Job announcement!',
       attachments: [
         offerAttachment,
         SlackAttachments.VOTE
