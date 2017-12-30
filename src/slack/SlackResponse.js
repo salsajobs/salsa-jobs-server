@@ -25,3 +25,6 @@ class SlackResponse {
     return fetch(responseUrl, options);
   }
 }
+
+
+module.exports = SlackResponse;
