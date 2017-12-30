@@ -18,9 +18,10 @@ const Offer = require('./Offer');
  * @param {*} res
  */
 async function broadcast(req, res) {
-    Logger.log('Jobs:routes:broadcast', { req, res });
     try {
         const offer = _buildOffer(req.body);
+        Logger.log('Jobs:routes:broadcast', { offer });
+
         await controller.broadcast(config.SLACK_BOT_URL, offer);
         res.status(201).send('Offer created');
     } catch (error) {

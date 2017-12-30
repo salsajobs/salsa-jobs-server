@@ -36,7 +36,6 @@ const SLACK_ACTIONS = {
  * @param {*} res
  */
 async function sendMessage(req, res) {
-  Logger.log('Slack:routes:sendMessage', { req, res });
   try {
     const payload = JSON.parse(req.body.payload);
     const action = payload.actions[0];

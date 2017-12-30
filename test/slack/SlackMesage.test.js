@@ -9,7 +9,6 @@ describe('slack.SlackMessage', () => {
   describe('Constructor', () => {
     it('should create a new object [01]', () => {
       expect(slackMessage.content).toBeDefined();
-      expect(slackMessage.content.text).toBeDefined();
       expect(slackMessage.content.attachments.length).toEqual(2);
     });
   });
