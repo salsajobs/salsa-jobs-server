@@ -11,26 +11,6 @@ const SlackActions = require('./slack.actions');
 const jobsController = require('../jobs/jobs.controller');
 const Offer = require('../jobs/Offer');
 
-const SLACK_ACTIONS = {
-  /**
-   * Return a promise resolved with a firebase reference to the offer.
-   */
-  downvote(payload, uid) {
-    Logger.log('Slack:routes:slack_actions:downvote', { payload, uid });
-    const offer = new Offer(payload.original_message);
-    return jobsController.vote(payload.response_url, 'downvote', offer, uid);
-  },
-
-  /**
-   * Return a promise resolved with a firebase reference to the offer.
-   */
-  upvote(payload, uid) {
-    Logger.log('Slack:routes:slack_actions:upvote', { payload, uid });
-    const offer = new Offer(payload.original_message);
-    return jobsController.vote(payload.response_url, 'upvote', offer, uid);
-  }
-};
-
 /**
  * Request handler for slack actions
  * @param {*} req
@@ -41,13 +21,19 @@ async function sendMessage(req, res) {
     const payload = JSON.parse(req.body.payload);
     const action = payload.actions[0];
     const uid = `${payload.team.id}-${payload.user.id}`;
+    const responseUrl = payload.response_url;
+    const offer = new Offer(payload.original_message);
 
-    Logger.log('Slack:routes:sendMessage', { action, uid });
+    Logger.log('Slack:routes:sendMessage', { responseUrl, action, uid });
 
     // TODO: Update message with vote count from reference?
-    SLACK_ACTIONS[action.value](payload, uid).then(() => {
-      res.status(200).send(payload.original_message);
-      _answer(payload.response_url, 'You voted', 'downvote');
+    jobsController
+      .vote(responseUrl, action.value, offer, uid)
+      .then(() => {
+        const vote = SlackActions[action.value.toUpperCase()].text;
+
+        res.status(200).send(payload.original_message);
+        return jobsController.broadcastSlackVoteResponse(responseUrl, offer, vote);
     });
 
   } catch (error) {
@@ -57,19 +43,3 @@ async function sendMessage(req, res) {
 }
 
 module.exports = { sendMessage };
-
-/**
-* Answer to a request url
-* @param {*} requestUrl
-* @param {*} message
-*/
-async function _answer(responseUrl, message, type) {
-  Logger.log('Slack:routes:_answer', { responseUrl, message, type });
-  const text = SlackActions[type.toUpperCase()].text;
-  const content = JSON.stringify({
-    text: `${message}: ${text}`,
-    replace_original: false
-  });
-  const options = { method: 'POST', body: content };
-  return fetch(responseUrl, options);
-}

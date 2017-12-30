@@ -68,4 +68,20 @@ function broadcastSlack(responseUrl, offer) {
   return slackMessage.broadcast(responseUrl);
 }
 
-module.exports = { broadcast, vote, postJob, getJob, broadcastSlack };
+/**
+* Answer to a request url
+* @param {*} requestUrl
+* @param {*} message
+*/
+function broadcastSlackVoteResponse(responseUrl, offer, vote) {
+  Logger.log('Jobs:controller:broadcastSlackVoteResponse', { responseUrl, offer });
+  const message = `You voted to ${offer.link}`;
+  const content = JSON.stringify({
+    text: `${message}: ${vote}`,
+    replace_original: false
+  });
+  const options = { method: 'POST', body: content };
+  return fetch(responseUrl, options);
+}
+
+module.exports = { broadcast, vote, postJob, getJob, broadcastSlack, broadcastSlackVoteResponse };
