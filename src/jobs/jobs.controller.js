@@ -1,8 +1,8 @@
 const config = require('../config');
 const Logger = require('../utils/logger');
-
 const persistence = require('./jobs.persistence');
 const SlackMessage = require('../slack/SlackMessage');
+const SlackResponse = require('../slack/SlackResponse');
 
 /**
  * Add a new job to the system.
@@ -69,19 +69,14 @@ function broadcastSlack(responseUrl, offer) {
 }
 
 /**
-* Answer to a request url
+* Send feedback to the user
 * @param {*} requestUrl
 * @param {*} message
 */
 function broadcastSlackVoteResponse(responseUrl, offer, vote) {
-  Logger.log('Jobs:controller:broadcastSlackVoteResponse', { responseUrl, offer });
-  const message = `You voted to ${offer.link}`;
-  const content = JSON.stringify({
-    text: `${message}: ${vote}`,
-    replace_original: false
-  });
-  const options = { method: 'POST', body: content };
-  return fetch(responseUrl, options);
+  Logger.log('Jobs:controller:broadcastSlackVoteResponse', { responseUrl, offer, vote });
+  const slackResponse = new SlackResponse(offer, vote);
+  return slackResponse.broadcast(responseUrl);
 }
 
 module.exports = { broadcast, vote, postJob, getJob, broadcastSlack, broadcastSlackVoteResponse };

@@ -24,7 +24,7 @@ class SlackMessage {
 
   /**
   * Send the job offer across the slack channels
-  * @param {*} offer
+  * @param {*} responseUrl
   */
   broadcast(responseUrl) {
     Logger.log('Class:SlackMessage:broadcast', { responseUrl });

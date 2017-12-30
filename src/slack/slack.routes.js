@@ -6,7 +6,6 @@
  */
 
 const Logger = require('../utils/logger');
-const fetch = require('node-fetch');
 const SlackActions = require('./slack.actions');
 const jobsController = require('../jobs/jobs.controller');
 const Offer = require('../jobs/Offer');
