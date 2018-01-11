@@ -5,5 +5,6 @@ const SLACK_BOT_URL = 'https://hooks.slack.com/services/T85KA5MSQ/B86EJ72K0/x7ED
 const LOGS_ACTIVE = true; // TODO set env variables
 const ALLOWED_ORIGINS = [
     'http://localhost:8080',
+    'https://nsjobs-f8648.firebaseapp.com/'
 ]
 module.exports = { FIREBASE_URL, SLACK_BOT_URL, JOBS_DATABASE, LOGS_ACTIVE, ALLOWED_ORIGINS };
