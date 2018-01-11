@@ -26,6 +26,25 @@ function getJob(offer) {
   return persistence.getOffer(offer);
 }
 
+function getAll() {
+  Logger.log('Jobs:controller:getAll');
+  return persistence.getAll()
+    .then(jobs => {
+      return jobs.map(job => {
+        return {
+          createdAt: job.createdAt,
+          description: job.description,
+          link: job.link,
+          votes: {
+            upvotes: (job.votes && Object.values(job.votes).filter(text => text === 'upvote').length) || 0,
+            downvotes: (job.votes && Object.values(job.votes).filter(text => text === 'downvote').length) || 0,
+          },
+          meta: job.meta
+        }
+      });
+    });
+}
+
 /**
  * Check first if the job offer already exists.
  * If so, broadcast it.
@@ -34,17 +53,17 @@ function getJob(offer) {
  * @param {object} offer
  */
 function broadcast(responseUrl, offer) {
-    Logger.log('Jobs:controller:broadcast', { responseUrl, offer });
+  Logger.log('Jobs:controller:broadcast', { responseUrl, offer });
 
-    return getJob(offer)
-      .then((dataSnapshot) => {
-        Logger.log('Jobs:controller:broadcast:getJob', { dataSnapshot });
-        const existingOffer = dataSnapshot.val();
+  return getJob(offer)
+    .then((dataSnapshot) => {
+      Logger.log('Jobs:controller:broadcast:getJob', { dataSnapshot });
+      const existingOffer = dataSnapshot.val();
 
-        return existingOffer
-          ? broadcastSlack(responseUrl, existingOffer)
-          : postJob(offer).then(() => broadcastSlack(responseUrl, offer));
-      });
+      return existingOffer
+        ? broadcastSlack(responseUrl, existingOffer)
+        : postJob(offer).then(() => broadcastSlack(responseUrl, offer));
+    });
 }
 
 /**
@@ -79,4 +98,4 @@ function broadcastSlackVoteResponse(responseUrl, offer, vote) {
   return slackResponse.broadcast(responseUrl);
 }
 
-module.exports = { broadcast, vote, postJob, getJob, broadcastSlack, broadcastSlackVoteResponse };
+module.exports = { broadcast, vote, postJob, getJob, broadcastSlack, broadcastSlackVoteResponse, getAll };

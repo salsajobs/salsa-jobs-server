@@ -33,6 +33,13 @@ function getOffer(offer) {
 }
 
 /**
+ * Return all entries from the database
+ */
+function getAll() {
+  return ref.once('value').then(data => data.val()).then(Object.values);
+}
+
+/**
  * Add a new vote to an existing offer.
  * 
  * The votes are indexed by userID this way we prevent an user from voting twice.
@@ -46,4 +53,4 @@ function vote(url, type, offer, uid) {
 }
 
 
-module.exports = { saveOffer, getOffer, vote };
+module.exports = { saveOffer, getOffer, vote, getAll };

@@ -31,6 +31,20 @@ async function broadcast(req, res) {
 }
 
 /**
+ * Get all jobs from the databse
+ */
+async function list(req, res) {
+    Logger.log('Jobs:routes:list');
+    try {
+        const list = await controller.getAll();
+        res.json(list);
+    } catch (err) {
+        res.sendStatus(500);
+    }
+
+}
+
+/**
  * Build an offer object from a http request.
  * @param {object} query
  */
@@ -39,4 +53,4 @@ function _buildOffer(query) {
     return new Offer(query);
 }
 
-module.exports = { broadcast };
+module.exports = { broadcast, list };
