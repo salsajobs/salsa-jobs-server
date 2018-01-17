@@ -1,92 +1,85 @@
-const fetch = require('jest-fetch-mock');
-jest.setMock('node-fetch', fetch);
-
 const controller = require('../../src/jobs/jobs.controller');
 const persistence = require('../../src/jobs/jobs.persistence');
-const SlackActions = require('../../src/slack/slack.actions');
-
-const { offer, existingOfferSnapshot, noOfferSnapshot } = require('../mocks');
+const { offer } = require('../mocks');
 
 describe('jobs.controller', () => {
-    describe('postJob', () => {
-      it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
 
-          return controller.postJob(offer);
-      });
+  describe('postJob', () => {
+    it('should create a new offer when the offer does not exist in the database', done => {
+      jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(false));
+      jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
+      expect(persistence.saveOffer).not.toHaveBeenCalled();
 
-      it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.reject());
-
-          return controller.postJob(offer).catch(done);
-      });
-    });
-
-    describe('getJob', () => {
-      it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve());
-
-          return controller.getJob(offer);
-      });
-
-      it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.reject());
-
-          return controller.getJob(offer).catch(done);
+      controller.postJob(offer).then(() => {
+        expect(persistence.saveOffer).toBeCalledWith(offer);
+        done();
       });
     });
 
-    describe('upvote', () => {
-      it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
+    it('should not create a new offer when the offer already exists in the database', done => {
+      jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(true));
+      jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
+      expect(persistence.saveOffer).not.toHaveBeenCalled();
 
-          return controller.vote(SlackActions.UPVOTE.value, offer);
+      controller.postJob(offer).then(() => {
+        expect(persistence.saveOffer).not.toHaveBeenCalled();
+        done();
       });
+    });
+  });
 
-      it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.reject());
+  describe('vote', () => {
+    it('should update the offer votes in the persistence', done => {
+      jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
+      jest.spyOn(persistence, 'getOfferById').mockImplementation(() => Promise.resolve());
+      expect(persistence.vote).not.toHaveBeenCalled();
 
-          return controller.vote(SlackActions.UPVOTE.value, offer).catch(done);
+      controller.vote('fakeId', 'fakeUid', 'fakeType').then(() => {
+        expect(persistence.vote).toBeCalledWith('fakeId', 'fakeUid', 'fakeType');
+        done();
+      });
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return an empty list when there are no jobs in the database', done => {
+      jest.spyOn(persistence, 'getAll').mockImplementation(() => Promise.resolve([]));
+      controller.getAll().then(result => {
+        expect(result).toEqual([]);
+        done();
       });
     });
 
-    describe('downvote', () => {
-      it('should return a resolved promise when persistence succees', () => {
-          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
+    it('should return a list of well formatted jobs when there are jobs on the database', done => {
+      jest.spyOn(persistence, 'getAll').mockImplementation(() => Promise.resolve([{
+        id: 'fake_id',
+        createdAt: 1516213783482,
+        description: 'fake_description',
+        link: 'https://fake-link.con',
+        votes: { 
+          id0: 'upvote',
+          id1: 'upvote',
+          id2: 'downvote',
+        },
+        meta: {}
+      }]));
 
-          return controller.vote(SlackActions.DOWNVOTE.value, offer);
-      });
-
-      it('should return a rejected promise when persistence fails', done => {
-          jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.reject());
-
-          return controller.vote(SlackActions.DOWNVOTE.value, offer).catch(done);
-      });
-    });
-
-    describe('broadcast', () => {
-      it('should return a resolved promise if the offer already exists', () => {
-          jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(existingOfferSnapshot));
-          jest.spyOn(controller, 'broadcastSlack').mockImplementation(() => Promise.resolve());
-          fetch.mockResponse('{}');
-
-          return controller.broadcast('responseUrl', offer);
-      });
-
-      it('should post an offer and return a resolved promise if the offer does not exist and broadcast succeeds', () => {
-          jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(noOfferSnapshot));
-          jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
-          jest.spyOn(controller, 'broadcastSlack').mockImplementation(() => Promise.resolve());
-          fetch.mockResponse('{}');
-
-          return controller.broadcast('responseUrl', offer);
-      });
-
-      it('should return a rejected promise when persistence fails and broadcast fails', done => {
-          jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.reject());
-          jest.spyOn(controller, 'broadcastSlack').mockImplementation(() => Promise.reject());
-
-          return controller.postJob(offer).catch(done);
+      controller.getAll().then(result => {
+        expect(result).toEqual([{
+          createdAt: 1516213783482,
+          description: 'fake_description',
+          link: 'https://fake-link.con',
+          votes: {
+            upvotes: 2,
+            downvotes: 1
+          },
+          meta: {}
+        }]);
+        done();
       });
     });
+  });
 });

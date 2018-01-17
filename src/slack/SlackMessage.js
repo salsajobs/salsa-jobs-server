@@ -1,36 +1,31 @@
-const fetch = require('node-fetch');
-const Logger = require('../utils/logger');
+const winston = require('winston');
 const SlackAttachments = require('./slack.attachments');
 
 class SlackMessage {
   constructor(offer) {
-    Logger.log('Class:SlackMessage:constructor', { offer });
-
-    const offerAttachment = Object.assign({}, SlackAttachments.OFFER, {
-      author_name: offer.meta.user_name,
-      title: offer.meta.text,
-      title_link: offer.link
-    });
-
-    const voteAttachment = Object.assign({}, SlackAttachments.VOTE);
+    winston.info('SlackMessage:constructor', offer);
+    // Add title and link to the attachment
+    SlackAttachments.VOTE.title = offer.link;
+    SlackAttachments.VOTE.title_link = offer.link;
 
     this.content = {
+      text: offer.description,
       attachments: [
-        offerAttachment,
         SlackAttachments.VOTE
       ]
     };
-  }
 
-  /**
-  * Send the job offer across the slack channels
-  * @param {*} responseUrl
-  */
-  broadcast(responseUrl) {
-    Logger.log('Class:SlackMessage:broadcast', { responseUrl });
-    const content = JSON.stringify(this.content);
-    const options = { method: 'POST', body: content };
-    return fetch(responseUrl, options);
+    if (offer.votes) {
+      let upvotes = 0;
+      let downvotes = 0;
+      
+      for (let uid in offer.votes) {
+        offer.votes[uid] === 'upvote' ? upvotes++ : downvotes++;
+      }
+
+      this.content.attachments[0].actions[0].text = `${upvotes} 👍`;
+      this.content.attachments[0].actions[1].text = `${downvotes} 👎`;
+    }
   }
 }
 

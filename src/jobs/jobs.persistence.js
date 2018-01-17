@@ -1,26 +1,24 @@
-const crypto = require('crypto');
 const firebase = require('firebase');
-const Logger = require('../utils/logger');
+const winston = require('winston');
+const config = require('../config/index');
 
-const FIREBASE_URL = require('../config/index').FIREBASE_URL;
-const JOBS_DATABASE = require('../config/index').JOBS_DATABASE;
-const SlackMessage = require('../slack/SlackMessage');
-const SlackActions = require('../slack/slack.actions');
+const DATABASE_NAME = config.DATABASE_NAME;
+const FIREBASE_URL = config.FIREBASE_URL;
 
-// Function used to create an unique id
-const hash = data => crypto.createHash('md5').update(data).digest("hex");
-
-const FirebaseApp = firebase.initializeApp({ databaseURL: FIREBASE_URL });
+// Firebase requires a global initialization 
+firebase.initializeApp({ databaseURL: FIREBASE_URL });
 const FirebaseDatabase = firebase.database();
-const ref = FirebaseDatabase.ref(JOBS_DATABASE);
+const ref = FirebaseDatabase.ref(DATABASE_NAME);
 
 /**
  * Store a job offer in the database.
  * @param {*} offer
  */
 function saveOffer(offer) {
-  Logger.log('Jobs:persistence:saveOffer', { offer });
-  return ref.child(hash(offer.link)).set(offer);
+  winston.info('jobs-persistence:postJob', offer);
+  return ref
+    .child(offer.id)
+    .set(offer);
 }
 
 /**
@@ -28,8 +26,34 @@ function saveOffer(offer) {
  * @param {*} offer
  */
 function getOffer(offer) {
-  Logger.log('Jobs:persistence:getOffer', { offer });
-  return ref.child(hash(offer.link)).once('value');
+  winston.info('jobs-persistence:getOffer', offer);
+  return getOfferById(offer.id);
+}
+
+/**
+ * Get a job offer from the database.
+ * @param {string} id
+ */
+function getOfferById(id) {
+  winston.info('jobs-persistence:getOfferById', id);
+  return ref
+    .child(id)
+    .once('value')
+    .then(snapshot => snapshot.val());
+}
+
+
+/**
+ * Add a new vote to an existing offer.
+ * 
+ * The votes are indexed by userID this way we prevent an user from voting twice.
+ */
+function vote(jobId, uid, type) {
+  winston.info('jobs-persistence:vote', { jobId, uid, type });
+  return ref.child(jobId)
+    .child('votes')
+    .child(uid)
+    .set(type);
 }
 
 /**
@@ -39,18 +63,5 @@ function getAll() {
   return ref.once('value').then(data => data.val()).then(Object.values);
 }
 
-/**
- * Add a new vote to an existing offer.
- * 
- * The votes are indexed by userID this way we prevent an user from voting twice.
- */
-function vote(url, type, offer, uid) {
-  Logger.log('Jobs:persistence:vote', { url, type, offer, uid });
-  return ref.child(hash(offer.link))
-    .child('votes')
-    .child(uid)
-    .set(type)
-}
 
-
-module.exports = { saveOffer, getOffer, vote, getAll };
+module.exports = { saveOffer, getOffer, vote, getOfferById, getAll };

@@ -1,0 +1,28 @@
+{
+	"text" : "fake_description",
+    "attachments": [
+        {
+            "color": "#7761fd",
+            "text": "Vote this offer!",
+			"title": "https://example.com/foo/bar",
+            "title_link": "https://example.com/foo/bar",
+            "fallback": "You are unable to vote :(",
+            "callback_id": "vote",
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "name": "vote",
+                    "text": "0 👍",
+                    "type": "button",
+                    "value": "upvote"
+                },
+                {
+                    "name": "vote",
+                    "text": "0 👎",
+                    "type": "button",
+                    "value": "downvote"
+                }
+            ]
+        }
+    ]
+}

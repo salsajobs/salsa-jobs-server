@@ -1,13 +1,13 @@
 const SlackActions = {
   UPVOTE: {
     name: 'vote',
-    text: '👍',
+    text: '0 👍',
     type: 'button',
     value: 'upvote'
   },
   DOWNVOTE: {
     name: 'vote',
-    text: '👎',
+    text: '0 👎',
     type: 'button',
     value: 'downvote'
   }

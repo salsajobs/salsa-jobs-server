@@ -1,101 +1,54 @@
-const config = require('../config');
-const Logger = require('../utils/logger');
+const winston = require('winston');
 const persistence = require('./jobs.persistence');
-const SlackMessage = require('../slack/SlackMessage');
-const SlackResponse = require('../slack/SlackResponse');
 
 /**
- * Add a new job to the system.
- *
- * @param {object} offer
- * @param {string} offer.text - The url where the offer is announced.
- */
-function postJob(offer) {
-  Logger.log('Jobs:controller:postJob', { offer });
-  return persistence.saveOffer(offer);
-}
-
-/**
- * Get a job offer from the system
- *
- * @param {object} offer
- * @param {string} offer.text - The url where the offer is announced.
- */
-function getJob(offer) {
-  Logger.log('Jobs:controller:getJob', { offer });
-  return persistence.getOffer(offer);
-}
-
-function getAll() {
-  Logger.log('Jobs:controller:getAll');
-  return persistence.getAll()
-    .then(jobs => {
-      return jobs.map(job => {
-        return {
-          createdAt: job.createdAt,
-          description: job.description,
-          link: job.link,
-          votes: {
-            upvotes: (job.votes && Object.values(job.votes).filter(text => text === 'upvote').length) || 0,
-            downvotes: (job.votes && Object.values(job.votes).filter(text => text === 'downvote').length) || 0,
-          },
-          meta: job.meta
-        }
-      });
-    });
-}
-
-/**
- * Check first if the job offer already exists.
- * If so, broadcast it.
- * Otherwise, add it first to the database and then broadcast it.
+ * Add a new job into the system if not exists.
  *
  * @param {object} offer
  */
-function broadcast(responseUrl, offer) {
-  Logger.log('Jobs:controller:broadcast', { responseUrl, offer });
-
-  return getJob(offer)
-    .then((dataSnapshot) => {
-      Logger.log('Jobs:controller:broadcast:getJob', { dataSnapshot });
-      const existingOffer = dataSnapshot.val();
-
-      return existingOffer
-        ? broadcastSlack(responseUrl, existingOffer)
-        : postJob(offer).then(() => broadcastSlack(responseUrl, offer));
-    });
+async function postJob(offer) {
+  winston.info('jobs-controller:postJob', offer);
+  const existingOffer = await persistence.getOffer(offer);
+  if (!existingOffer) {
+    return persistence.saveOffer(offer);
+  }
+  return Promise.resolve();
 }
 
 /**
- * Add a new vote to an offer
+ * Add a new vote to an offer.
  *
  * @param {object} offer
  */
-function vote(url, type, offer, uid) {
-  Logger.log('Jobs:controller:vote', { url, type, offer, uid });
-  return persistence.vote(url, type, offer, uid);
+async function vote(offerId, uid, type) {
+  winston.info('jobs-controller:postJob', { offerId, uid, type });
+  await persistence.vote(offerId, uid, type);
+  return persistence.getOfferById(offerId);
 }
 
 /**
- * Get a job offer from the system
- *
- * @param {object} offer
+ * List all jobs in the database.
  */
-function broadcastSlack(responseUrl, offer) {
-  Logger.log('Jobs:controller:broadcastSlack', { responseUrl, offer });
-  const slackMessage = new SlackMessage(offer);
-  return slackMessage.broadcast(responseUrl);
+async function getAll() {
+  winston.info('jobs-controller:getAll');
+  const jobs = await persistence.getAll();
+  return jobs.map(_createPublicJob);
 }
 
 /**
-* Send feedback to the user
-* @param {*} requestUrl
-* @param {*} message
-*/
-function broadcastSlackVoteResponse(responseUrl, offer, vote) {
-  Logger.log('Jobs:controller:broadcastSlackVoteResponse', { responseUrl, offer, vote });
-  const slackResponse = new SlackResponse(offer, vote);
-  return slackResponse.broadcast(responseUrl);
+ * Transform an job from the database to a public object availiable in the API.
+ */
+function _createPublicJob(job) {
+  return {
+    createdAt: job.createdAt,
+    description: job.description,
+    link: job.link,
+    votes: {
+      upvotes: (job.votes && Object.values(job.votes).filter(text => text === 'upvote').length) || 0,
+      downvotes: (job.votes && Object.values(job.votes).filter(text => text === 'downvote').length) || 0,
+    },
+    meta: job.meta
+  };
 }
 
-module.exports = { broadcast, vote, postJob, getJob, broadcastSlack, broadcastSlackVoteResponse, getAll };
+module.exports = { vote, postJob, getAll };
