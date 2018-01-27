@@ -9,19 +9,21 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "env-cmd": "^7.0.0",
     "eslint": "^4.14.0",
     "express": "^4.16.2",
     "firebase": "^4.7.0",
     "firebase-admin": "^5.5.1",
     "node-fetch": "^1.7.3",
+    "nodemon": "^1.14.11",
     "request": "^2.83.0",
     "winston": "^2.4.0"
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "DATABASE_NAME=jobs FIREBASE_URL=https://nsjobs-f8648.firebaseio.com/ nodemon index.js",
-    "test": "DATABASE_NAME=jobs FIREBASE_URL=https://test-database.firebaseapp.io jest",
-    "test:watch": "DATABASE_NAME=jobs FIREBASE_URL=https://test-database.firebaseapp.io  jest --watch --verbose",
+    "dev": "env-cmd .env nodemon index.js",
+    "test": "env-cmd .env jest",
+    "test:watch": "env-cmd .env jest --watch --verbose",
     "prepush": "npm test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
