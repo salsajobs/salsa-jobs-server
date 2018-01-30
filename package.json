@@ -22,7 +22,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "env-cmd .env nodemon index.js",
-    "test": "env-cmd .env jest",
+    "test": "env-cmd .env jest --verbose",
     "test:watch": "env-cmd .env jest --watch --verbose",
     "prepush": "npm test",
     "lint": "eslint .",
