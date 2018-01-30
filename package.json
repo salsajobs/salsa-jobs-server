@@ -13,7 +13,7 @@
     "eslint": "^4.14.0",
     "express": "^4.16.2",
     "firebase": "^4.7.0",
-    "firebase-admin": "^5.5.1",
+    "firebase-admin": "^5.8.1",
     "node-fetch": "^1.7.3",
     "nodemon": "^1.14.11",
     "request": "^2.83.0",
@@ -26,7 +26,9 @@
     "test:watch": "env-cmd .env jest --watch --verbose",
     "prepush": "npm test",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "admin:token": "env-cmd .env node scripts/generateToken.js",
+    "admin:user": "env-cmd .env node scripts/createUser.js"
   },
   "devDependencies": {
     "eslint-plugin-jest": "^21.5.0",
