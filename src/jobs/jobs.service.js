@@ -3,12 +3,12 @@ const crypto = require('crypto');
 
 /**
  * Create a job object from a {@link https://api.slack.com/slash-commands|slack payload}
- * 
+ *
  * @param {object} slackMessage - The object passed passed by the slack api
- * @param {string} slackMessage.text - The message raw text 
+ * @param {string} slackMessage.text - The message raw text
  * @param {string} slackMessage.channel_id - The channel id where the message was created
  * @param {string} slackMessage.channel_id - The id of the user that created the message
- * 
+ *
  * @return {Job}
  */
 function createJob(slackMessage) {
@@ -20,14 +20,15 @@ function createJob(slackMessage) {
   job.text = slackMessage.text;
   job.description = _getDescription(job.text, job.link);
   job.meta = slackMessage;
+  job.votes = [];
 
   return job;
 }
 
 /**
  * Get url links from a given text string
- * 
- * @param {string} text 
+ *
+ * @param {string} text
  */
 function getLink(text) {
   try {
@@ -41,8 +42,8 @@ function getLink(text) {
 /**
  * Creates a md5 hash for a given string
  * Since firebase cannot store elements using a url as primary key we hash them.
- * 
- * @param {string} data 
+ *
+ * @param {string} data
  */
 function hash(data) {
   return crypto.createHash('md5').update(data).digest('hex');
