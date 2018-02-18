@@ -11,14 +11,14 @@ class SlackMessage {
     this.content = {
       text: offer.description,
       attachments: [
-        SlackAttachments.VOTE
+        Object.assign({}, SlackAttachments.VOTE),
       ]
     };
 
     if (offer.votes) {
       let upvotes = 0;
       let downvotes = 0;
-      
+
       for (let uid in offer.votes) {
         offer.votes[uid] === 'upvote' ? upvotes++ : downvotes++;
       }
