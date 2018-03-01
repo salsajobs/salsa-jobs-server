@@ -27,7 +27,6 @@
     "prepush": "npm test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "admin:token": "env-cmd .env node scripts/generateToken.js",
     "admin:user": "env-cmd .env node scripts/createUser.js"
   },
   "devDependencies": {
