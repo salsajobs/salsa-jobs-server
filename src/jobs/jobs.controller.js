@@ -12,7 +12,7 @@ async function postJob(offer) {
   if (!existingOffer) {
     return persistence.saveOffer(offer);
   }
-  return Promise.resolve();
+  return Promise.resolve(existingOffer);
 }
 
 /**

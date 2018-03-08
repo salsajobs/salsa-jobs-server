@@ -1,26 +1,14 @@
-const firebase = require('firebase');
 const winston = require('winston');
-const config = require('../config/index');
-
-const DATABASE_NAME = config.DATABASE_NAME;
-const FIREBASE_URL = config.FIREBASE_URL;
-const FIREBASE_API_KEY = config.FIREBASE_API_KEY;
-const FIREBASE_CREDENTIALS = config.FIREBASE_CREDENTIALS;
-
-// Firebase requires a global initialization 
-const app = firebase.initializeApp({  apiKey: FIREBASE_API_KEY, databaseURL: FIREBASE_URL });
-// Autenticate the firebase client
-firebase.auth(app).signInWithCustomToken(FIREBASE_CREDENTIALS);
-const FirebaseDatabase = firebase.database();
-const ref = FirebaseDatabase.ref(DATABASE_NAME);
+const { ref } = require('../config/firebase');
 
 /**
  * Store a job offer in the database.
  * @param {*} offer
  */
 function saveOffer(offer) {
-  winston.info('jobs-persistence:postJob', offer);
+  winston.info('jobs-persistence:saveOffer', offer);
   return ref
+    .child('jobs')
     .child(offer.id)
     .set(offer);
 }
@@ -41,6 +29,7 @@ function getOffer(offer) {
 function getOfferById(id) {
   winston.info('jobs-persistence:getOfferById', id);
   return ref
+    .child('jobs')
     .child(id)
     .once('value')
     .then(snapshot => snapshot.val());
@@ -49,7 +38,7 @@ function getOfferById(id) {
 
 /**
  * Add a new vote to an existing offer.
- * 
+ *
  * The votes are indexed by userID this way we prevent an user from voting twice.
  */
 function vote(jobId, uid, type) {
