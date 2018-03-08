@@ -8,6 +8,7 @@ const { ref } = require('../config/firebase');
 function saveOffer(offer) {
   winston.info('jobs-persistence:saveOffer', offer);
   return ref
+    .child('jobs')
     .child(offer.id)
     .set(offer);
 }
@@ -28,6 +29,7 @@ function getOffer(offer) {
 function getOfferById(id) {
   winston.info('jobs-persistence:getOfferById', id);
   return ref
+    .child('jobs')
     .child(id)
     .once('value')
     .then(snapshot => snapshot.val());

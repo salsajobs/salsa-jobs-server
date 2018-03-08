@@ -1,7 +1,7 @@
 const winston = require('winston');
 const controller = require('./jobs.controller');
 const slackService = require('../slack/slack.service');
-const teamsService = require('../teams/teams.service');
+const teamsController = require('../teams/teams.controller');
 const jobService = require('./jobs.service');
 
 /**
@@ -12,9 +12,10 @@ async function post(req, res) {
   try {
     const offer = jobService.createJob(req.body);
     await controller.postJob(offer);
-    const incomingWebhook = teamsService.getIncomingWebhook(offer);
-    await slackService.broadcast(offer, incomingWebhook.url);
-    res.status(201).send('Offer created');
+    const incomingWebhookURL = teamsController.getIncomingWebhookUrl(offer.meta.team_id);
+    await slackService.broadcast(offer, incomingWebhookURL);
+
+    res.status(201).send('Offer created!');
   } catch (error) {
     winston.error('jobs-router:post', { payload: req.body, error });
     return res.sendStatus(500);
