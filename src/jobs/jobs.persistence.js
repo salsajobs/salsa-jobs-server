@@ -43,8 +43,9 @@ function getOfferById(id) {
  */
 function vote(jobId, uid, type) {
   winston.info('jobs-persistence:vote', { jobId, uid, type });
-  return ref.child(jobId)
+  return ref
     .child('jobs')
+    .child(jobId)
     .child('votes')
     .child(uid)
     .set(type);
