@@ -8,11 +8,16 @@ const persistence = require('./teams.persistence');
  */
 async function save(team) {
   winston.info('teams-controller:postTeam', team);
-  const existingTeam = await persistence.getTeam(team);
-  if (!existingTeam) {
-    return persistence.saveTeam(team);
-  }
-  return Promise.resolve();
+  const slackTeam = persistence.saveTeam(team);
+
+  return Promise.resolve(slackTeam);
 }
 
-module.exports = { save };
+async function getIncomingWebhookUrl(teamId) {
+  winston.info('teams-controller:getIncomingWebhookUrl', teamId);
+  const team = persistence.getTeamById(teamId);
+
+  return Promise.resolve(team);
+}
+
+module.exports = { save, getIncomingWebhookUrl };

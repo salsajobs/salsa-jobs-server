@@ -8,8 +8,22 @@ const { ref } = require('../config/firebase');
 function saveTeam(credentials) {
   winston.info('teams-persistence:saveTeam', credentials);
   return ref
+    .child('teams')
     .child(credentials.team_id)
     .set(credentials);
 }
 
-module.exports = { saveTeam };
+/**
+ * Get team by id
+ * @param {*} teamId
+ */
+function getTeamById(teamId) {
+  winston.info('teams-persistence:getTeamById', teamId);
+  return ref
+    .child('teams')
+    .child(teamId)
+    .once('value')
+    .then(snapshot => snapshot.val());
+}
+
+module.exports = { saveTeam, getTeamById };
