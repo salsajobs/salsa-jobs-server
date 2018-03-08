@@ -1,20 +1,22 @@
 const winston = require('winston');
 const controller = require('./oauth.controller');
-const teamsController = require('../teams/teams.controller');
 const service = require('./oauth.service');
 
 /**
- * Handle authorized login
+ * Handle authorized login and save team credentials
  */
 async function login(req, res) {
-  winston.log('oauth-router:login');
+  winston.log('oauth-router:login', { payload: req.query.code });
+
   const code = req.query.code;
   const URL = controller.getAuthorizeURL(code);
 
   try {
-    const credentials = await service.authorize(URL);
-    await teamsController.save(credentials);
-    res.status(200).send('saved');
+    const authorizeResponse = await service.authorize(URL);
+    const credentials = await authorizeResponse.json();
+    const response = await controller.saveCredentials(credentials);
+
+    res.status(200).send(response);
   } catch (error) {
     res.status(500).send(error);
   }
