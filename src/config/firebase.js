@@ -1,4 +1,5 @@
 const config = require('./index');
+const firebase = require('firebase');
 
 const DATABASE_NAME = config.DATABASE_NAME;
 const FIREBASE_URL = config.FIREBASE_URL;
