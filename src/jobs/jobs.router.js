@@ -13,7 +13,7 @@ async function post(req, res) {
   try {
     const offer = jobService.createJob(req.body);
     await controller.postJob(offer);
-    const incomingWebhookURL = teamsController.getIncomingWebhookUrl(offer.meta.team_id);
+    const incomingWebhookURL = await teamsController.getIncomingWebhookUrl(offer.meta.team_id);
     winston.info('jobs-router:post_incomingWebhookURL', { incomingWebhookURL });
     await slackService.broadcast(offer, incomingWebhookURL);
 
