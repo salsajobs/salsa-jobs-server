@@ -2,14 +2,15 @@
 
 // This script is a helper used to create firebase users with read/write permissions.
 
+var winston = require('winston');
 var admin = require('firebase-admin');
 var serviceAccount = require('./credentials.json');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount), 
+  credential: admin.credential.cert(serviceAccount),
   databaseURL: process.env.FIREBASE_URL,
 });
 
 admin.auth().createUser({ uid: 'staging' })
-  .then(console.log)
-  .catch(console.error);
+  .then(winston.log)
+  .catch(winston.error);
