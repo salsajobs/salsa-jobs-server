@@ -15,9 +15,9 @@ async function save(team) {
 
 async function getIncomingWebhookUrl(teamId) {
   winston.info('teams-controller:getIncomingWebhookUrl', teamId);
-  const team = persistence.getTeamById(teamId);
+  const team = await persistence.getTeamById(teamId);
 
-  return Promise.resolve(team);
+  return Promise.resolve(team.incoming_webhook.url);
 }
 
 module.exports = { save, getIncomingWebhookUrl };
