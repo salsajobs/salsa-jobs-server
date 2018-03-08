@@ -9,10 +9,12 @@ const jobService = require('./jobs.service');
  * If the job already exists in the database, just broadcast to the channel
  */
 async function post(req, res) {
+  winston.info('jobs-router:post', { payload: req.body });
   try {
     const offer = jobService.createJob(req.body);
     await controller.postJob(offer);
     const incomingWebhookURL = teamsController.getIncomingWebhookUrl(offer.meta.team_id);
+    winston.info('jobs-router:post_incomingWebhookURL', { incomingWebhookURL });
     await slackService.broadcast(offer, incomingWebhookURL);
 
     res.status(201).send('Offer created!');
