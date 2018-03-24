@@ -10,9 +10,10 @@ const jobService = require('./jobs.service');
  */
 async function post(req, res) {
   winston.info('jobs-router:post', { payload: req.body });
+
   try {
     const offer = jobService.createJob(req.body);
-    await controller.postJob(offer);
+    await controller.postJob(offer); // TODO get if job already exists
     const incomingWebhookURL = await teamsController.getIncomingWebhookUrl(offer.meta.team_id);
     winston.info('jobs-router:post_incomingWebhookURL', { incomingWebhookURL });
     await slackService.broadcast(offer, incomingWebhookURL);

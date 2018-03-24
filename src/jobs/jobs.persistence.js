@@ -39,7 +39,10 @@ function getOfferById(id) {
 /**
  * Add a new vote to an existing offer.
  *
- * The votes are indexed by userID this way we prevent an user from voting twice.
+ * The votes are indexed by userID. This way we prevent an user from voting twice.
+ * @param {string} jobId
+ * @param {string} uid
+ * @param {string} type
  */
 function vote(jobId, uid, type) {
   winston.info('jobs-persistence:vote', { jobId, uid, type });

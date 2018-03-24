@@ -7,7 +7,7 @@ describe('jobs.controller', () => {
     jest.resetAllMocks();
   });
 
-  describe('postJob', () => {
+  describe('.postJob', () => {
     it('should create a new offer when the offer does not exist in the database', done => {
       jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(false));
       jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
@@ -31,7 +31,7 @@ describe('jobs.controller', () => {
     });
   });
 
-  describe('vote', () => {
+  describe('.vote', () => {
     it('should update the offer votes in the persistence', done => {
       jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
       jest.spyOn(persistence, 'getOfferById').mockImplementation(() => Promise.resolve());
@@ -44,7 +44,7 @@ describe('jobs.controller', () => {
     });
   });
 
-  describe('getAll', () => {
+  describe('.getAll', () => {
     it('should return an empty list when there are no jobs in the database', done => {
       jest.spyOn(persistence, 'getAll').mockImplementation(() => Promise.resolve([]));
       controller.getAll().then(result => {
@@ -59,7 +59,7 @@ describe('jobs.controller', () => {
         createdAt: 1516213783482,
         description: 'fake_description',
         link: 'https://fake-link.con',
-        votes: { 
+        votes: {
           id0: 'upvote',
           id1: 'upvote',
           id2: 'downvote',

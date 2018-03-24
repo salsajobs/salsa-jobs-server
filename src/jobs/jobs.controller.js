@@ -2,7 +2,7 @@ const winston = require('winston');
 const persistence = require('./jobs.persistence');
 
 /**
- * Add a new job into the system if not exists.
+ * Add a new job into the system if it does not exists.
  *
  * @param {object} offer
  */
@@ -18,7 +18,9 @@ async function postJob(offer) {
 /**
  * Add a new vote to an offer.
  *
- * @param {object} offer
+ * @param {object} offerId
+ * @param {string} uid
+ * @param {string} type
  */
 async function vote(offerId, uid, type) {
   winston.info('jobs-controller:postJob', { offerId, uid, type });
@@ -38,17 +40,31 @@ async function getAll() {
 /**
  * Transform an job from the database to a public object availiable in the API.
  */
-function _createPublicJob(job) {
+function _createPublicJob(job, teamId) {
   return {
     createdAt: job.createdAt,
     description: job.description,
     link: job.link,
     votes: {
-      upvotes: (job.votes && Object.values(job.votes).filter(text => text === 'upvote').length) || 0,
-      downvotes: (job.votes && Object.values(job.votes).filter(text => text === 'downvote').length) || 0,
+      upvotes: _getVotes.call(this, teamId, job.votes, 'upvote'),
+      downvotes: _getVotes.call(this, teamId, job.votes, 'downvote')
     },
     meta: job.meta
   };
+}
+
+function _getVotes(teamId, votes, voteType) {
+  return (votes &&
+    _filterByTeamId.call(this, Object.keys(votes), teamId) &&
+    _filterByVoteType.call(this, Object.values(votes), voteType)).length || 0;
+}
+
+function _filterByTeamId(votes, teamId) {
+  return votes.filter(vote => vote.includes(teamId));
+}
+
+function _filterByVoteType(votes, type) {
+  return votes.filter(vote => vote === type);
 }
 
 module.exports = { vote, postJob, getAll };
