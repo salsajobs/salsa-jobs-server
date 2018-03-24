@@ -1,5 +1,4 @@
-const WEBSITE_URL =  process.env.ALLOWED_CLIENT_URL;
-const ERROR_PAGE_PATH = `${WEBSITE_URL}/error.html`;
+const WEBSITE_URL = process.env.ALLOWED_CLIENT_URL;
 
 module.exports = Object.freeze({
   Oauth: Object.freeze({
@@ -10,7 +9,7 @@ module.exports = Object.freeze({
       },
       Error: {
         CODE: 500,
-        REDIRECT_PATH: ERROR_PAGE_PATH
+        REDIRECT_PATH: `${WEBSITE_URL}/error.html`
       }
     })
   })
