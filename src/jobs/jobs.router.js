@@ -19,7 +19,7 @@ async function post(req, res) {
     winston.info('jobs-router:post_incomingWebhookURL', { incomingWebhookURL });
     await slackService.broadcast(postedJob.job, incomingWebhookURL);
 
-    return postedJob.job.existing
+    return postedJob.existing
       ? res
         .status(Responses.Jobs.Post.SuccessExisting.CODE)
         .send(Responses.Jobs.Post.SuccessExisting.MESSAGE)
