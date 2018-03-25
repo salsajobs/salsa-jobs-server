@@ -1,6 +1,6 @@
 const winston = require('winston');
 const teamsController = require('../teams/teams.controller');
-const config = require('./src/config/index');
+const config = require('../config/index');
 
 /**
   * Get authorize url for a given code
