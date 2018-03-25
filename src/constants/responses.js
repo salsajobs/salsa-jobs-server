@@ -1,4 +1,4 @@
-const config = require('../src/config/index');
+const config = require('../../src/config/index');
 
 module.exports = Object.freeze({
   Oauth: Object.freeze({
