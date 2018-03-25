@@ -1,6 +1,6 @@
 const controller = require('../../src/jobs/jobs.controller');
 const persistence = require('../../src/jobs/jobs.persistence');
-const { offer } = require('../mocks');
+const { job } = require('../mocks');
 
 describe('jobs.controller', () => {
   beforeEach(() => {
@@ -8,33 +8,33 @@ describe('jobs.controller', () => {
   });
 
   describe('.postJob', () => {
-    it('should create a new offer when the offer does not exist in the database', done => {
-      jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(false));
-      jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
-      expect(persistence.saveOffer).not.toHaveBeenCalled();
+    it('should create a new job when the job does not exist in the database', done => {
+      jest.spyOn(persistence, 'getJob').mockImplementation(() => Promise.resolve(false));
+      jest.spyOn(persistence, 'saveJob').mockImplementation(() => Promise.resolve());
+      expect(persistence.saveJob).not.toHaveBeenCalled();
 
-      controller.postJob(offer).then(() => {
-        expect(persistence.saveOffer).toBeCalledWith(offer);
+      controller.postJob(job).then(() => {
+        expect(persistence.saveJob).toBeCalledWith(job);
         done();
       });
     });
 
-    it('should not create a new offer when the offer already exists in the database', done => {
-      jest.spyOn(persistence, 'getOffer').mockImplementation(() => Promise.resolve(true));
-      jest.spyOn(persistence, 'saveOffer').mockImplementation(() => Promise.resolve());
-      expect(persistence.saveOffer).not.toHaveBeenCalled();
+    it('should not create a new job when the job already exists in the database', done => {
+      jest.spyOn(persistence, 'getJob').mockImplementation(() => Promise.resolve(true));
+      jest.spyOn(persistence, 'saveJob').mockImplementation(() => Promise.resolve());
+      expect(persistence.saveJob).not.toHaveBeenCalled();
 
-      controller.postJob(offer).then(() => {
-        expect(persistence.saveOffer).not.toHaveBeenCalled();
+      controller.postJob(job).then(() => {
+        expect(persistence.saveJob).not.toHaveBeenCalled();
         done();
       });
     });
   });
 
   describe('.vote', () => {
-    it('should update the offer votes in the persistence', done => {
+    it('should update the job votes in the persistence', done => {
       jest.spyOn(persistence, 'vote').mockImplementation(() => Promise.resolve());
-      jest.spyOn(persistence, 'getOfferById').mockImplementation(() => Promise.resolve());
+      jest.spyOn(persistence, 'getJobById').mockImplementation(() => Promise.resolve());
       expect(persistence.vote).not.toHaveBeenCalled();
 
       controller.vote('fakeId', 'fakeUid', 'fakeType').then(() => {

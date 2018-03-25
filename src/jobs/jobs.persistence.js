@@ -2,32 +2,32 @@ const winston = require('winston');
 const { ref } = require('../config/firebase');
 
 /**
- * Store a job offer in the database.
- * @param {*} offer
+ * Store a job job in the database.
+ * @param {*} job
  */
-function saveOffer(offer) {
-  winston.info('jobs-persistence:saveOffer', offer);
+function saveJob(job) {
+  winston.info('jobs-persistence:saveJob', job);
   return ref
     .child('jobs')
-    .child(offer.id)
-    .set(offer);
+    .child(job.id)
+    .set(job);
 }
 
 /**
- * Get a job offer from the database.
- * @param {*} offer
+ * Get a job job from the database.
+ * @param {*} job
  */
-function getOffer(offer) {
-  winston.info('jobs-persistence:getOffer', offer);
-  return getOfferById(offer.id);
+function getJob(job) {
+  winston.info('jobs-persistence:getJob', job);
+  return getJobById(job.id);
 }
 
 /**
- * Get a job offer from the database.
+ * Get a job job from the database.
  * @param {string} id
  */
-function getOfferById(id) {
-  winston.info('jobs-persistence:getOfferById', id);
+function getJobById(id) {
+  winston.info('jobs-persistence:getJobById', id);
   return ref
     .child('jobs')
     .child(id)
@@ -37,7 +37,7 @@ function getOfferById(id) {
 
 
 /**
- * Add a new vote to an existing offer.
+ * Add a new vote to an existing job.
  *
  * The votes are indexed by userID. This way we prevent an user from voting twice.
  * @param {string} jobId
@@ -62,4 +62,4 @@ function getAll() {
 }
 
 
-module.exports = { saveOffer, getOffer, vote, getOfferById, getAll };
+module.exports = { saveJob, getJob, vote, getJobById, getAll };

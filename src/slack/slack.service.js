@@ -3,18 +3,18 @@ const SlackMessage = require('./SlackMessage');
 const winston = require('winston');
 
 /**
- * Send a job offer to a slack channel
+ * Send a job job to a slack channel
  */
-async function broadcast(offer, slackUrl) {
-  winston.info('slack-service:broadcast', { offer, slackUrl });
+async function broadcast(job, slackUrl) {
+  winston.info('slack-service:broadcast', { job, slackUrl });
   const method = 'POST';
-  const slackMessage = serialize(offer);
+  const slackMessage = serialize(job);
   const body = JSON.stringify(slackMessage);
   return fetch(slackUrl, { method, body });
 }
 
-function serialize(offer) {
-  return new SlackMessage(offer).content;
+function serialize(job) {
+  return new SlackMessage(job).content;
 }
 
 

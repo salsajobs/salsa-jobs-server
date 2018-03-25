@@ -4,28 +4,36 @@ const persistence = require('./jobs.persistence');
 /**
  * Add a new job into the system if it does not exists.
  *
- * @param {object} offer
+ * @param {object} job
  */
-async function postJob(offer) {
-  winston.info('jobs-controller:postJob', offer);
-  const existingOffer = await persistence.getOffer(offer);
-  if (!existingOffer) {
-    return persistence.saveOffer(offer);
+async function postJob(job) {
+  winston.info('jobs-controller:postJob', job);
+  const existingJob = await persistence.getJob(job);
+
+  if (!existingJob) {
+    return {
+      job: persistence.saveJob(job),
+      existing: false
+    };
   }
-  return Promise.resolve(existingOffer);
+
+  return Promise.resolve({
+    job: existingJob,
+    existing: true
+  });
 }
 
 /**
- * Add a new vote to an offer.
+ * Add a new vote to a job.
  *
- * @param {object} offerId
+ * @param {object} jobId
  * @param {string} uid
  * @param {string} type
  */
-async function vote(offerId, uid, type) {
-  winston.info('jobs-controller:postJob', { offerId, uid, type });
-  await persistence.vote(offerId, uid, type);
-  return persistence.getOfferById(offerId);
+async function vote(jobId, uid, type) {
+  winston.info('jobs-controller:postJob', { jobId, uid, type });
+  await persistence.vote(jobId, uid, type);
+  return persistence.getJobById(jobId);
 }
 
 /**
@@ -38,29 +46,24 @@ async function getAll() {
 }
 
 /**
- * Transform an job from the database to a public object availiable in the API.
+ * Transform a job from the database to a public object availiable in the API.
  */
-function _createPublicJob(job, teamId) {
+function _createPublicJob(job) {
   return {
     createdAt: job.createdAt,
     description: job.description,
     link: job.link,
+    meta: job.meta,
     votes: {
-      upvotes: _getVotes.call(this, teamId, job.votes, 'upvote'),
-      downvotes: _getVotes.call(this, teamId, job.votes, 'downvote')
+      upvotes: _getVotes(job.votes, 'upvote'),
+      downvotes: _getVotes(job.votes, 'downvote')
     },
-    meta: job.meta
   };
 }
 
-function _getVotes(teamId, votes, voteType) {
+function _getVotes(votes, voteType) {
   return (votes &&
-    _filterByTeamId.call(this, Object.keys(votes), teamId) &&
     _filterByVoteType.call(this, Object.values(votes), voteType)).length || 0;
-}
-
-function _filterByTeamId(votes, teamId) {
-  return votes.filter(vote => vote.includes(teamId));
 }
 
 function _filterByVoteType(votes, type) {

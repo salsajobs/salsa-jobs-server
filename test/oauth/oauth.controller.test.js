@@ -1,7 +1,6 @@
 const oauthController = require('../../src/oauth/oauth.controller');
 const teamsController = require('../../src/teams/teams.controller');
-
-const Urls = require('../../src/constants/urls');
+const config = require('../../src/config/index');
 
 describe('oauth.controller', () => {
   beforeEach(() => {
@@ -13,7 +12,7 @@ describe('oauth.controller', () => {
       const CODE = '1234';
       const url = oauthController.getAuthorizedURL(CODE);
 
-      expect(url).toContain(Urls.OAUTH_ACCESS);
+      expect(url).toContain(config.OAUTH_ACCESS);
       expect(url).toContain(CODE);
     });
   });

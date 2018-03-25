@@ -3,7 +3,7 @@
     "attachments": [
         {
             "color": "#7761fd",
-            "text": "Vote this offer!",
+            "text": "Vote this job!",
 			"title": "https://example.com/foo/bar",
             "title_link": "https://example.com/foo/bar",
             "fallback": "You are unable to vote :(",

@@ -35,7 +35,7 @@ function getLink(text) {
     const link = text.match(URL_REGEX);
     return link[0];
   } catch (err) {
-    throw new Error(`Job offers must have a link. [${text}]`);
+    throw new Error(`Job jobs must have a link. [${text}]`);
   }
 }
 

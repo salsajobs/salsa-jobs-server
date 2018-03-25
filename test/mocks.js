@@ -1,12 +1,12 @@
 const jobService = require('../src/jobs/jobs.service');
 
-const _fakeOfferPayload = {
+const _fakeJobPayload = {
   channel_id: 'channel_id_mock',
   user_id: 'user_id_mock',
   text: 'https://example.com/foo/bar fake_description'
 };
 
-const offer = jobService.createJob(_fakeOfferPayload);
+const job = jobService.createJob(_fakeJobPayload);
 
 const team = {
   access_token: 'abcd-111111111111-222222222222-333333333333-abcdefg123456abcdefg123456abcdef',
@@ -23,4 +23,4 @@ const team = {
   user_id: 'UIJKL9012'
 };
 
-module.exports = { offer, team };
+module.exports = { job, team };
