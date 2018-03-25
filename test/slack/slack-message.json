@@ -3,10 +3,10 @@
     "attachments": [
         {
             "color": "#7761fd",
-            "text": "Vote this job!",
+            "text": "¡Vota esta oferta!",
 			"title": "https://example.com/foo/bar",
             "title_link": "https://example.com/foo/bar",
-            "fallback": "You are unable to vote :(",
+            "fallback": "No puedes votar esta oferta :(",
             "callback_id": "vote",
             "attachment_type": "default",
             "actions": [
