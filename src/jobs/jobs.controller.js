@@ -10,17 +10,9 @@ async function postJob(job) {
   winston.info('jobs-controller:postJob', job);
   const existingJob = await persistence.getJob(job);
 
-  if (!existingJob) {
-    return {
-      job: persistence.saveJob(job),
-      existing: false
-    };
-  }
-
-  return Promise.resolve({
-    job: existingJob,
-    existing: true
-  });
+  return !existingJob
+    ? { job: persistence.saveJob(job), existing: false }
+    : { job: existingJob, existing: true };
 }
 
 /**
