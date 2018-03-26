@@ -58,7 +58,11 @@ function vote(jobId, uid, type) {
  * Return all entries from the database
  */
 function getAll() {
-  return ref.once('value').then(data => data.val()).then(Object.values);
+  return ref
+    .child('jobs')
+    .once('value')
+    .then(data => data.val())
+    .then(Object.values);
 }
 
 
