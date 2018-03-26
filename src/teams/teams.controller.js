@@ -10,7 +10,7 @@ async function save(credentials) {
   winston.info('teams-controller:save', credentials);
 
   return credentials.hasOwnProperty('team_id')
-    ? Promise.resolve(persistence.save(credentials))
+    ? persistence.save(credentials)
     : Promise.reject(new Error(Errors.Teams.MUST_HAVE_TEAM_ID));
 }
 

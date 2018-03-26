@@ -10,15 +10,15 @@ async function postJob(job) {
   winston.info('jobs-controller:postJob', job);
   const existingJob = await persistence.getJob(job);
 
-  return !existingJob
-    ? { job: persistence.saveJob(job), existing: false }
-    : { job: existingJob, existing: true };
+  return existingJob
+    ? { job: existingJob, existing: true }
+    : { job: persistence.saveJob(job), existing: false };
 }
 
 /**
  * Add a new vote to a job.
  *
- * @param {object} jobId
+ * @param {string} jobId
  * @param {string} uid
  * @param {string} type
  */
@@ -54,8 +54,7 @@ function _createPublicJob(job) {
 }
 
 function _getVotes(votes, voteType) {
-  return (votes &&
-    _filterByVoteType.call(this, Object.values(votes), voteType)).length || 0;
+  return (votes && _filterByVoteType(Object.values(votes), voteType)).length || 0;
 }
 
 function _filterByVoteType(votes, type) {
