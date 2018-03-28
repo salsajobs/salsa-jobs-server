@@ -7,7 +7,7 @@ const Responses = require('../constants/responses');
  * Handle authorized login and save team credentials
  */
 async function login(req, res) {
-  winston.log('oauth-router:login', { payload: req.query.code });
+  winston.info('oauth-router:login', { payload: req.query.code });
 
   const code = req.query.code;
   const URL = controller.getAuthorizedURL(code);

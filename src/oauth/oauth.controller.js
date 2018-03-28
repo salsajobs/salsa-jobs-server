@@ -7,13 +7,9 @@ const config = require('../config/index');
   * @param {string} code Slack authorization code
  */
 function getAuthorizedURL(code) {
-  winston.log('oauth-controller:getAuthorizedURL', { code });
+  winston.info('oauth-controller:getAuthorizedURL', { code });
 
-  return `${config.OAUTH_ACCESS}?\
-          client_id=${config.CLIENT_ID}&\
-          client_secret=${config.CLIENT_SECRET}&\
-          code=${code}&\
-          redirect_uri=${config.REDIRECT_URI}`;
+  return `${config.OAUTH_URL}?client_id=${config.CLIENT_ID}&client_secret=${config.CLIENT_SECRET}&code=${code}&redirect_uri=${config.REDIRECT_URI}`;
 }
 
 /**
@@ -21,7 +17,7 @@ function getAuthorizedURL(code) {
   * @param {*} credentials Slack team credentials
  */
 async function saveCredentials(credentials) {
-  winston.log('oauth-controller:saveCredentials', { credentials });
+  winston.info('oauth-controller:saveCredentials', { credentials });
 
   await teamsController.save(credentials);
 }
