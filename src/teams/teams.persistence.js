@@ -5,8 +5,8 @@ const { ref } = require('../config/firebase');
  * Store team credentials in the database.
  * @param {*} team
  */
-function saveTeam(credentials) {
-  winston.info('teams-persistence:saveTeam', credentials);
+function save(credentials) {
+  winston.info('teams-persistence:save', credentials);
   return ref
     .child('teams')
     .child(credentials.team_id)
@@ -26,4 +26,4 @@ function getTeamById(teamId) {
     .then(snapshot => snapshot.val());
 }
 
-module.exports = { saveTeam, getTeamById };
+module.exports = { save, getTeamById };

@@ -2,28 +2,30 @@ const winston = require('winston');
 const persistence = require('./jobs.persistence');
 
 /**
- * Add a new job into the system if not exists.
+ * Add a new job into the system if it does not exists.
  *
- * @param {object} offer
+ * @param {object} job
  */
-async function postJob(offer) {
-  winston.info('jobs-controller:postJob', offer);
-  const existingOffer = await persistence.getOffer(offer);
-  if (!existingOffer) {
-    return persistence.saveOffer(offer);
-  }
-  return Promise.resolve(existingOffer);
+async function postJob(job) {
+  winston.info('jobs-controller:postJob', job);
+  const existingJob = await persistence.getJob(job);
+
+  return existingJob
+    ? { job: existingJob, existing: true }
+    : { job: persistence.saveJob(job), existing: false };
 }
 
 /**
- * Add a new vote to an offer.
+ * Add a new vote to a job.
  *
- * @param {object} offer
+ * @param {string} jobId
+ * @param {string} uid
+ * @param {string} type
  */
-async function vote(offerId, uid, type) {
-  winston.info('jobs-controller:postJob', { offerId, uid, type });
-  await persistence.vote(offerId, uid, type);
-  return persistence.getOfferById(offerId);
+async function vote(jobId, uid, type) {
+  winston.info('jobs-controller:postJob', { jobId, uid, type });
+  await persistence.vote(jobId, uid, type);
+  return persistence.getJobById(jobId);
 }
 
 /**
@@ -36,19 +38,27 @@ async function getAll() {
 }
 
 /**
- * Transform an job from the database to a public object availiable in the API.
+ * Transform a job from the database to a public object availiable in the API.
  */
 function _createPublicJob(job) {
   return {
     createdAt: job.createdAt,
     description: job.description,
     link: job.link,
+    meta: job.meta,
     votes: {
-      upvotes: (job.votes && Object.values(job.votes).filter(text => text === 'upvote').length) || 0,
-      downvotes: (job.votes && Object.values(job.votes).filter(text => text === 'downvote').length) || 0,
+      upvotes: _getVotes(job.votes, 'upvote'),
+      downvotes: _getVotes(job.votes, 'downvote')
     },
-    meta: job.meta
   };
+}
+
+function _getVotes(votes, voteType) {
+  return (votes && _filterByVoteType(Object.values(votes), voteType)).length || 0;
+}
+
+function _filterByVoteType(votes, type) {
+  return votes.filter(vote => vote === type);
 }
 
 module.exports = { vote, postJob, getAll };

@@ -2,25 +2,25 @@ const winston = require('winston');
 const SlackAttachments = require('./slack.attachments');
 
 class SlackMessage {
-  constructor(offer) {
-    winston.info('SlackMessage:constructor', offer);
+  constructor(job) {
+    winston.info('SlackMessage:constructor', job);
     // Add title and link to the attachment
-    SlackAttachments.VOTE.title = offer.link;
-    SlackAttachments.VOTE.title_link = offer.link;
+    SlackAttachments.VOTE.title = job.link;
+    SlackAttachments.VOTE.title_link = job.link;
 
     this.content = {
-      text: offer.description,
+      text: job.description,
       attachments: [
         Object.assign({}, SlackAttachments.VOTE),
       ]
     };
 
-    if (offer.votes) {
+    if (job.votes) {
       let upvotes = 0;
       let downvotes = 0;
 
-      for (let uid in offer.votes) {
-        offer.votes[uid] === 'upvote' ? upvotes++ : downvotes++;
+      for (let uid in job.votes) {
+        job.votes[uid] === 'upvote' ? upvotes++ : downvotes++;
       }
 
       this.content.attachments[0].actions[0].text = `${upvotes} 👍`;

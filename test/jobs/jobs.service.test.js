@@ -14,7 +14,7 @@ describe('jobs.service', () => {
       };
 
       const job = jobsService.createJob(fakePayload);
-      
+
       expect(job.id).toBeDefined();
       expect(job.link).toEqual('https://example.com/foo/bar');
       expect(job.createdAt).toBeDefined();
