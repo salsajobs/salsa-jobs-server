@@ -5,11 +5,11 @@ module.exports = Object.freeze({
     Login: Object.freeze({
       Success: {
         CODE: 200,
-        REDIRECT_PATH: `${config.WEBSITE_URL}/welcome.html`
+        REDIRECT_PATH: `${config.ALLOWED_CLIENT_URL}/welcome.html`
       },
       Error: {
         CODE: 500,
-        REDIRECT_PATH: `${config.WEBSITE_URL}/error.html`
+        REDIRECT_PATH: `${config.ALLOWED_CLIENT_URL}/error.html`
       }
     })
   }),
