@@ -14,9 +14,9 @@ async function postJob(job) {
     return { job: existingJob, existing: true };
   }
 
-  job = await persistence.saveJob(job);
-
-  return { job, existing: false };
+  return existingJob
+    ? { job: existingJob, existing: true }
+    : { job: persistence.saveJob(job), existing: false };
 }
 
 /**
