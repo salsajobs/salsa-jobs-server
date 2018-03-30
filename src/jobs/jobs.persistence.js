@@ -58,6 +58,8 @@ function vote(jobId, uid, type) {
  * Return all entries from the database
  */
 function getAll() {
+  winston.info('jobs-persistence:getAll');
+
   return ref
     .child('jobs')
     .once('value')

@@ -12,5 +12,5 @@ admin.initializeApp({
 });
 
 admin.auth().createUser({ uid: 'staging' })
-  .then(winston.log)
+  .then(winston.info)
   .catch(winston.error);

@@ -41,7 +41,9 @@ async function getAll() {
  * Transform a job from the database to a public object availiable in the API.
  */
 function _createPublicJob(job) {
-  return {
+  if (!job.votes) job.votes = [];
+
+  const vote = {
     createdAt: job.createdAt,
     description: job.description,
     link: job.link,
@@ -49,12 +51,14 @@ function _createPublicJob(job) {
     votes: {
       upvotes: _getVotes(job.votes, 'upvote'),
       downvotes: _getVotes(job.votes, 'downvote')
-    },
+    }
   };
+
+  return vote;
 }
 
 function _getVotes(votes, voteType) {
-  return (votes && _filterByVoteType(Object.values(votes), voteType)).length || 0;
+  return (_filterByVoteType(Object.values(votes), voteType)).length || 0;
 }
 
 function _filterByVoteType(votes, type) {
