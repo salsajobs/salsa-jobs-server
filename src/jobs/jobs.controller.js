@@ -8,11 +8,14 @@ const persistence = require('./jobs.persistence');
  */
 async function postJob(job) {
   winston.info('jobs-controller:postJob', job);
-  const existingJob = await persistence.getJob(job);
+  let newJob = await persistence.getJob(job);
 
-  return existingJob
-    ? { job: existingJob, existing: true }
-    : { job: persistence.saveJob(job), existing: false };
+  if (!newJob) {
+    newJob = await persistence.saveJob(job);
+    return { job: newJob, existing: false };
+  }
+
+  return { job: newJob, existing: true };
 }
 
 /**

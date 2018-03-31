@@ -1,10 +1,6 @@
 const jobsService = require('../../src/jobs/jobs.service.js');
 
 describe('jobs.service', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   describe('.createJob', () => {
     it('should create a new job object from a slack message payload', () => {
       const fakePayload = {

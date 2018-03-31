@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 .env
 scripts/credentials.json
+*.log
+*.output.txt
