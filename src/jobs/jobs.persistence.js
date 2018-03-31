@@ -2,7 +2,7 @@ const winston = require('winston');
 const { ref } = require('../config/firebase');
 
 /**
- * Store a job job in the database.
+ * Store a job job in the database and return the new created job.
  * @param {*} job
  */
 function saveJob(job) {
@@ -10,7 +10,8 @@ function saveJob(job) {
   return ref
     .child('jobs')
     .child(job.id)
-    .set(job);
+    .set(job)
+    .then(() => getJobById(job.id));
 }
 
 /**
