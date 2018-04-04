@@ -13,11 +13,19 @@ async function post(req, res) {
   winston.info('jobs-router:post', { payload: req.body });
 
   try {
+    if (_isHelpMessage(req.body)) {
+      return res
+        .status(Responses.Jobs.Post.Help.CODE)
+        .send(Responses.Jobs.Post.Help.MESSAGE);
+    }
+
     const job = jobService.createJob(req.body);
     const postedJob = await controller.postJob(job);
-    winston.info('jobs-router:postedJob', postedJob);
     const incomingWebhookURL = await teamsController.getIncomingWebhookUrl(job.meta.team_id);
+
+    winston.info('jobs-router:postedJob', postedJob);
     winston.info('jobs-router:post_incomingWebhookURL', { incomingWebhookURL });
+
     await slackService.broadcast(postedJob.job, incomingWebhookURL);
 
     return postedJob.existing
@@ -45,7 +53,6 @@ async function vote(req, res) {
     const action = payload.actions[0];
     const type = action.value.toLowerCase();
     const uid = `${payload.team.id}-${payload.user.id}`;
-    // TODO: can we get the id easier?
     const jobLink = jobService.getLink(payload.original_message.attachments[0].title_link);
     const jobId = jobService.hash(jobLink);
     const job = await controller.vote(jobId, uid, type);
@@ -70,5 +77,10 @@ async function list(req, res) {
   }
 }
 
+function _isHelpMessage (message) {
+  const STARTS_WITH_HELP_REGEX = /^help.*$/;
+
+  return message.match(STARTS_WITH_HELP_REGEX);
+}
 
 module.exports = { post, vote, list };
