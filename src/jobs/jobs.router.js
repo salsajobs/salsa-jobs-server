@@ -13,7 +13,7 @@ async function post(req, res) {
   winston.info('jobs-router:post', { payload: req.body });
 
   try {
-    if (_isHelpMessage(req.body)) {
+    if (_isHelpMessage(req.body.text)) {
       return res
         .status(Responses.Jobs.Post.Help.CODE)
         .send(Responses.Jobs.Post.Help.MESSAGE);
