@@ -23,6 +23,10 @@ module.exports = Object.freeze({
         CODE: 201,
         MESSAGE: 'La oferta de empleo que acabas de compartir ya estaba registrada en SalsaJobs, ¡Ahora también la puede votar tu equipo!'
       },
+      Help: {
+        CODE: 201,
+        MESSAGE: '¡Hola! Para saber más sobre SalsaJobs, visita la web https://salsajobs.com'
+      },
       Error: {
         CODE: 500,
         MESSAGE: 'Ups! No se ha podido registar la oferta de empleo.'
