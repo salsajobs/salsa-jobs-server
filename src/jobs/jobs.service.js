@@ -31,11 +31,14 @@ function createJob(slackMessage) {
  * @param {string} text
  */
 function getLink(text) {
+  if (!text) {
+    throw new Error('no-text');
+  }
   try {
     const link = text.match(URL_REGEX);
     return link[0];
   } catch (err) {
-    throw new Error(`Para publicar una oferta hay que introducir un link válido.. [${text}]`);
+    throw new Error(`Job jobs must have a link. [${text}]`);
   }
 }
 

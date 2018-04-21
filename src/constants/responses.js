@@ -30,6 +30,10 @@ module.exports = Object.freeze({
       Error: {
         CODE: 500,
         MESSAGE: 'Ups! No se ha podido registar la oferta de empleo.'
+      },
+      ErrorNoText: {
+        CODE: 200, // otherwise slack wont show the message
+        MESSAGE: 'Comando vacio! Más info en https://salsajobs.com/#example'
       }
     })
   })
