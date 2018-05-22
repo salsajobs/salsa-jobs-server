@@ -23,15 +23,27 @@ module.exports = Object.freeze({
         CODE: 201,
         MESSAGE: 'La oferta de empleo que acabas de compartir ya estaba registrada en SalsaJobs, ¡Ahora también la puede votar tu equipo!'
       },
+      SuccessList: {
+        CODE: 201,
+        MESSAGE: 'Aquí tienes las últimas ofertas publicadas en SalsaJobs'
+      },
       Help: {
         CODE: 201,
         MESSAGE: '¡Hola! Para saber más sobre SalsaJobs, visita la web https://salsajobs.com'
       },
-      Error: {
+      ErrorCreate: {
         CODE: 500,
         MESSAGE: 'Ups! No se ha podido registar la oferta de empleo.'
       },
-      ErrorNoText: {
+      ErrorList: {
+        CODE: 500,
+        MESSAGE: 'Ups! No se han podido listar las ofertas de empleo.'
+      },
+      ErrorVote: {
+        CODE: 500,
+        MESSAGE: 'Ups! No se ha podido votar la oferta de empleo.'
+      },
+      Empty: {
         CODE: 200, // otherwise slack wont show the message
         MESSAGE: 'Comando vacio! Más info en https://salsajobs.com/#example'
       }

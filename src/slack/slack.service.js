@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
-const SlackMessage = require('./SlackMessage');
+const JobMessage = require('./JobMessage');
+const JobListMessage = require('./JobListMessage');
 const winston = require('winston');
 
 /**
@@ -7,16 +8,19 @@ const winston = require('winston');
  */
 async function broadcast(job, slackUrl) {
   winston.info('slack-service:broadcast', { job, slackUrl });
+  
   const method = 'POST';
-  const slackMessage = serialize(job);
+  const slackMessage = serializeJob(job);
   const body = JSON.stringify(slackMessage);
   return fetch(slackUrl, { method, body });
 }
 
-function serialize(job) {
-  return new SlackMessage(job).content;
+function serializeJob(job) {
+  return new JobMessage(job).content;
 }
 
+function serializeJobList(list) {
+  return new JobListMessage(list).content;
+}
 
-
-module.exports = { broadcast, serialize };
+module.exports = { broadcast, serializeJob, serializeJobList };

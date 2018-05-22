@@ -1,5 +1,5 @@
 {
-    "text": "fake_description",
+    "text": "fake_description-1",
     "attachments": [
         {
             "color": "#7761fd",
@@ -21,8 +21,8 @@
                     "value": "downvote"
                 }
             ],
-            "title": "https://example.com/foo/bar",
-            "title_link": "https://example.com/foo/bar"
+            "title": "https://example.com/foo/bar/1",
+            "title_link": "https://example.com/foo/bar/1"
         }
     ]
 }
