@@ -50,7 +50,6 @@ function _createPublicJob(job) {
     createdAt: job.createdAt,
     description: job.description,
     link: job.link,
-    meta: job.meta,
     votes: {
       upvotes: _getVotes(job.votes, 'upvote'),
       downvotes: _getVotes(job.votes, 'downvote')

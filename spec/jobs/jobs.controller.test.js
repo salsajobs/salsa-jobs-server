@@ -99,7 +99,6 @@ describe('.getAll', () => {
           upvotes: 2,
           downvotes: 1
         },
-        meta: {}
       }]);
     });
   });
