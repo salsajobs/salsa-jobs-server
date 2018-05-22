@@ -122,7 +122,7 @@ async function _sendJobList(req, res) {
     const jobListMessage = slackService.serializeJobList(list);
 
     return res
-      .status(Responses.Jobs.SuccessList.Help.CODE)
+      .status(Responses.Jobs.SuccessList.CODE)
       .send(jobListMessage);
 
   } catch (error) {
