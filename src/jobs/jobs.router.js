@@ -67,7 +67,8 @@ const commandFunctions = {
   help:    _sendHelp,
   joblist: _sendJobList,
   empty:   _sendEmpty,
-  createjob:  _sendCreateJob
+  createjob:  _sendCreateJob,
+  wrongcommand: _sendHelp
 };
 
 

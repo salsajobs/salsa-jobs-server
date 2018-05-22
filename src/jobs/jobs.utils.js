@@ -29,7 +29,8 @@ function getCommand(text) {
   if (text.match(Regex.EMPTY)) return Commands.EMPTY;
   if (text.match(Regex.HELP)) return Commands.HELP;
   if (text.match(Regex.JOB_LIST)) return Commands.JOB_LIST;
-  return Commands.CREATE_JOB;
+  if (text.match(Regex.URL)) return Commands.CREATE_JOB;
+  return Commands.WRONG_COMMAND;
 }
 
 module.exports = { getLink, getCommand };

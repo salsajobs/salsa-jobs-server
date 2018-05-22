@@ -44,8 +44,8 @@ module.exports = Object.freeze({
         MESSAGE: 'Ups! No se ha podido votar la oferta de empleo.'
       },
       Empty: {
-        CODE: 200, // otherwise slack wont show the message
-        MESSAGE: 'Comando vacio! Más info en https://salsajobs.com/#example'
+        CODE: 200,
+        MESSAGE: '¡Comando vacío! Más info en https://salsajobs.com/#example'
       }
     })
   })

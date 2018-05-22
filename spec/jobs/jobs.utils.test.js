@@ -45,10 +45,18 @@ describe('.getCommand', () => {
     expect(actual).toEqual(expected);
   });
 
-  it('should return the creatjob command if it is not any of the previous commands', () => {
-    const text = 'whatever';
+  it('should return createjob command if the text contains a link', () => {
+    const text = 'https://example.com';
     const actual = jobsUtils.getCommand(text);
     const expected = Commands.CREATE_JOB;
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should return the wrongcommand command if it is not any of the previous commands', () => {
+    const text = 'whatever';
+    const actual = jobsUtils.getCommand(text);
+    const expected = Commands.WRONG_COMMAND;
 
     expect(actual).toEqual(expected);
   });

@@ -1,6 +1,7 @@
 module.exports = Object.freeze({
   HELP: 'help',
-  JOBLIST: 'joblist',
+  JOB_LIST: 'joblist',
   EMPTY: 'empty',
-  CREATE_JOB: 'createjob'
+  CREATE_JOB: 'createjob',
+  WRONG_COMMAND: 'wrongcommand'
 });
