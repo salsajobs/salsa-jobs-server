@@ -14,7 +14,9 @@ class JobListMessage {
     let jobListText = [];
 
     list.forEach((job) => {
-      jobListText.push(`- ${job.link}`);
+      let upvotes = job.votes.upvotes ? job.votes.upvotes : 0;
+      let downvotes = job.votes.downvotes ? job.votes.downvotes : 0;
+      jobListText.push(`➡️  ${job.link} | ${upvotes} 👍 ${downvotes} 👎`);
     });
 
     return jobListText.join('\n');
