@@ -1,18 +1,12 @@
 const winston = require('winston');
-const SlackAttachments = require('./slack.attachments');
 
 class SlackMessage {
   constructor(job) {
     winston.info('SlackMessage:constructor', job);
-    // Add title and link to the attachment
-    SlackAttachments.VOTE.title = job.link;
-    SlackAttachments.VOTE.title_link = job.link;
 
     this.content = {
       text: job.description,
-      attachments: [
-        Object.assign({}, SlackAttachments.VOTE),
-      ]
+      attachments: this._generateAttachments(job)
     };
 
     if (job.votes) {
@@ -26,6 +20,34 @@ class SlackMessage {
       this.content.attachments[0].actions[0].text = `${upvotes} 👍`;
       this.content.attachments[0].actions[1].text = `${downvotes} 👎`;
     }
+  }
+
+  _generateAttachments(job) {
+    return [
+      {
+        color: '#7761fd',
+        text: '¡Vota esta oferta!',
+        fallback: 'No puedes votar esta oferta :(',
+        callback_id: 'vote',
+        attachment_type: 'default',
+        actions: [
+          {
+            name: 'vote',
+            text: '0 👍',
+            type: 'button',
+            value: 'upvote'
+          },
+          {
+            name: 'vote',
+            text: '0 👎',
+            type: 'button',
+            value: 'downvote'
+          }
+        ],
+        title: job.link,
+        title_link: job.link,
+      },
+    ];
   }
 }
 

@@ -1,6 +1,6 @@
 const rewire = require('rewire');
 const slackService = rewire('../../src/slack/slack.service');
-const body = JSON.stringify(require('./expected-body.json')); // Test the message format in https://api.slack.com/docs/messages/builder
+const expectedBody = JSON.stringify(require('./expected-body.json')); // Test the message format in https://api.slack.com/docs/messages/builder
 
 
 describe('slack.service', () => {
@@ -16,7 +16,8 @@ describe('slack.service', () => {
       return slackService.broadcast(mockJob, 'https://www.slack-url.com').then(() => {
         expect(fetchSpy.calls.argsFor(0)[0]).toEqual('https://www.slack-url.com');
         expect(fetchSpy.calls.argsFor(0)[1].method).toEqual('POST');
-        expect(fetchSpy.calls.argsFor(0)[1].body).toEqual(body);
+        expect(fetchSpy.calls.argsFor(0)[1].body).toEqual(expectedBody);
+        
       });
     });
   });
