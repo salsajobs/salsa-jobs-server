@@ -38,9 +38,9 @@ describe('.getCommand', () => {
   });
 
   it('should return the joblist command if the text starts with joblist', () => {
-    const text = 'joblist';
+    const text = 'list';
     const actual = jobsUtils.getCommand(text);
-    const expected = Commands.JOB_LIST;
+    const expected = Commands.LIST;
 
     expect(actual).toEqual(expected);
   });

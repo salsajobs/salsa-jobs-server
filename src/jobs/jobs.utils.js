@@ -11,7 +11,7 @@ function getLink(text) {
   winston.info('jobs-utils:getLink', { text });
 
   try {
-    const link = text.match(Regex.URL);
+    const link = text.match(Regex.IS_URL);
     return link[0];
   } catch (err) {
     throw new Error(`Job jobs must have a link. [${text}]`);
@@ -26,10 +26,10 @@ function getLink(text) {
 function getCommand(text) {
   winston.info('jobs-utils:getCommand', { text });
 
-  if (text.match(Regex.EMPTY)) return Commands.EMPTY;
-  if (text.match(Regex.HELP)) return Commands.HELP;
-  if (text.match(Regex.JOB_LIST)) return Commands.JOB_LIST;
-  if (text.match(Regex.URL)) return Commands.CREATE_JOB;
+  if (text.match(Regex.IS_URL)) return Commands.CREATE_JOB;
+  if (text.match(Regex.STARTS_WITH_LIST)) return Commands.LIST;
+  if (text.match(Regex.STARTS_WITH_HELP)) return Commands.HELP;
+  if (text.match(Regex.IS_EMPTY)) return Commands.EMPTY;
   return Commands.WRONG_COMMAND;
 }
 

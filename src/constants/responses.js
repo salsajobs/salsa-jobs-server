@@ -14,6 +14,24 @@ module.exports = Object.freeze({
     })
   }),
   Jobs: Object.freeze({
+    List: Object.freeze({
+      Success: {
+        CODE: 200
+      },
+      Error: {
+        CODE: 500,
+        MESSAGE: 'Ups! No se han podido listar las ofertas de empleo.'
+      }
+    }),
+    Vote: Object.freeze({
+      Success: {
+        CODE: 200
+      },
+      Error: {
+        CODE: 500,
+        MESSAGE: 'Ups! No se ha podido votar la oferta de empleo.'
+      }
+    }),
     Post: Object.freeze({
       SuccessNew: {
         CODE: 201,
@@ -34,14 +52,6 @@ module.exports = Object.freeze({
       ErrorCreate: {
         CODE: 500,
         MESSAGE: 'Ups! No se ha podido registar la oferta de empleo.'
-      },
-      ErrorList: {
-        CODE: 500,
-        MESSAGE: 'Ups! No se han podido listar las ofertas de empleo.'
-      },
-      ErrorVote: {
-        CODE: 500,
-        MESSAGE: 'Ups! No se ha podido votar la oferta de empleo.'
       },
       Empty: {
         CODE: 200,

@@ -1,6 +1,6 @@
 module.exports = Object.freeze({
-  HELP: /^help.*$/,
-  EMPTY: /^$/,
-  JOB_LIST: /^joblist.*$/,
-  URL: /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?/,
+  IS_EMPTY: /^$/,
+  STARTS_WITH_HELP: /^help.*$/,
+  STARTS_WITH_LIST: /^list.*$/,
+  IS_URL: /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?/,
 });
