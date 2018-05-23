@@ -5,21 +5,22 @@ class JobListMessage {
     winston.info('JobListMessage:constructor', list);
 
     this.content = {
-      text: this._generateJobList(list),
+      text: this._getJobList(list),
       mrkdwn: true
     };
   }
 
-  _generateJobList(list) {
-    let jobListText = [];
+  _getJobList(list) {
+    return list
+      .map(this._getJobListItem)
+      .join('\n');
+  }
 
-    list.forEach((job) => {
-      let upvotes = job.votes.upvotes ? job.votes.upvotes : 0;
-      let downvotes = job.votes.downvotes ? job.votes.downvotes : 0;
-      jobListText.push(`➡️  ${job.link} | ${upvotes} 👍 ${downvotes} 👎`);
-    });
+  _getJobListItem(job) {
+    let upvotes = job.votes.upvotes ? job.votes.upvotes : 0;
+    let downvotes = job.votes.downvotes ? job.votes.downvotes : 0;
 
-    return jobListText.join('\n');
+    return `➡️  ${job.link} | ${upvotes} 👍 ${downvotes} 👎`;
   }
 }
 
