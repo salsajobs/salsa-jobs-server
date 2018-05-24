@@ -1,6 +1,8 @@
 node_modules
 .DS_Store
 .env
+.env_staging
 scripts/credentials.json
+scripts/credentials_staging.json
 *.log
 *.output.txt

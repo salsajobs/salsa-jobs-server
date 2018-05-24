@@ -1,13 +1,15 @@
 const rewire = require('rewire');
 const slackService = rewire('../../src/slack/slack.service');
-const expectedBody = JSON.stringify(require('./expected-body.json')); // Test the message format in https://api.slack.com/docs/messages/builder
-
+const expectedJob = JSON.stringify(require('./expected-job.json'));
+const expectedJobList = require('./expected-job-list.json').list;
 
 describe('slack.service', () => {
   let mockJob;
+
   beforeEach(() => {
     mockJob = JSON.parse(JSON.stringify(require('../mocks').job));
   });
+
   describe('.broadcast', () => {
     it('should send a job job through a slack channel', () => {
       const fetchSpy = jasmine.createSpy('fetch');
@@ -16,13 +18,12 @@ describe('slack.service', () => {
       return slackService.broadcast(mockJob, 'https://www.slack-url.com').then(() => {
         expect(fetchSpy.calls.argsFor(0)[0]).toEqual('https://www.slack-url.com');
         expect(fetchSpy.calls.argsFor(0)[1].method).toEqual('POST');
-        expect(fetchSpy.calls.argsFor(0)[1].body).toEqual(expectedBody);
-        
+        expect(fetchSpy.calls.argsFor(0)[1].body).toEqual(expectedJob);
       });
     });
   });
 
-  describe('.serialize', () => {
+  describe('.serializeJob', () => {
     it('should return a message including the votes', () => {
       mockJob.votes = {
         uid0: 'upvote',
@@ -30,9 +31,18 @@ describe('slack.service', () => {
         uid2: 'downvote',
       };
 
-      const actual = slackService.serialize(mockJob);
+      const actual = slackService.serializeJob(mockJob);
       expect(actual.attachments[0].actions[0].text).toEqual('2 👍');
       expect(actual.attachments[0].actions[1].text).toEqual('1 👎');
+    });
+  });
+
+  describe('.serializeJobList', () => {
+    let mockJobList = JSON.parse(JSON.stringify(require('../mocks').jobList));
+
+    it('should return a message listing the jobs', () => {
+      const actual = slackService.serializeJobList(mockJobList);
+      expect(actual.text).toEqual(expectedJobList);
     });
   });
 });

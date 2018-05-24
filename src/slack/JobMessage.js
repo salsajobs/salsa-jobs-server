@@ -1,8 +1,8 @@
 const winston = require('winston');
 
-class SlackMessage {
+class JobMessage {
   constructor(job) {
-    winston.info('SlackMessage:constructor', job);
+    winston.info('JobMessage:constructor', job);
 
     this.content = {
       text: job.description,
@@ -52,4 +52,4 @@ class SlackMessage {
 }
 
 
-module.exports = SlackMessage;
+module.exports = JobMessage;

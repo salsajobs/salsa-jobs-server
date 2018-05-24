@@ -1,5 +1,5 @@
-const URL_REGEX = /(?:http|https):\/\/((?:[\w-]+)(?:\.[\w-]+)+)(?:[\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?/;
 const crypto = require('crypto');
+const jobsUtils = require('./jobs.utils');
 
 /**
  * Create a job object from a {@link https://api.slack.com/slash-commands|slack payload}
@@ -7,14 +7,14 @@ const crypto = require('crypto');
  * @param {object} slackMessage - The object passed passed by the slack api
  * @param {string} slackMessage.text - The message raw text
  * @param {string} slackMessage.channel_id - The channel id where the message was created
- * @param {string} slackMessage.channel_id - The id of the user that created the message
+ * @param {string} slackMessage.user_id - The id of the user that created the message
  *
  * @return {Job}
  */
 function createJob(slackMessage) {
   const job = {};
 
-  job.link = getLink(slackMessage.text);
+  job.link = jobsUtils.getLink(slackMessage.text);
   job.id = hash(job.link);
   job.createdAt = Date.now();
   job.text = slackMessage.text;
@@ -23,23 +23,6 @@ function createJob(slackMessage) {
   job.votes = [];
 
   return job;
-}
-
-/**
- * Get url links from a given text string
- *
- * @param {string} text
- */
-function getLink(text) {
-  if (!text) {
-    throw new Error('no-text');
-  }
-  try {
-    const link = text.match(URL_REGEX);
-    return link[0];
-  } catch (err) {
-    throw new Error(`Job jobs must have a link. [${text}]`);
-  }
 }
 
 /**
@@ -57,4 +40,4 @@ function _getDescription(rawText, link) {
 }
 
 
-module.exports = { createJob, getLink, hash };
+module.exports = { createJob, hash };
